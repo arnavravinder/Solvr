@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Solvr - MCQ Solver</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link 
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" 
+      rel="stylesheet"
+    >
+    <link rel="stylesheet" href="solver-style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-logo">Solvr</div>
+        <div class="timer-container">
+            <span>Time left: <span id="timer">45:00</span></span>
+            <button id="add-time-btn">Add 15 Minutes</button>
+        </div>
+    </nav>
+    <div class="main-container">
+        <div class="pdf-viewer">
+            <iframe id="pdfFrame" style="width:100%; height:100%;" frameborder="0"></iframe>
+        </div>
+        <div class="question-panel">
+            <h2>Questions</h2>
+            <div id="questions-container"></div>
+            <button id="submitAnswersBtn" class="submit-btn">Submit</button>
+        </div>
+    </div>
+    <div class="scoreboard" id="scoreboard" style="display:none;">
+        <h2>Your Answers & Score!</h2>
+        <div class="score-summary">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Your Score</th>
+                        <th>Total Questions</th>
+                        <th>% Correct</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td id="userScore"></td>
+                        <td id="totalQuestions"></td>
+                        <td id="percentCorrect"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <h3>Answers</h3>
+        <table class="answers-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Your Answer</th>
+                    <th>Correct Answer</th>
+                </tr>
+            </thead>
+            <tbody id="answers-body"></tbody>
+        </table>
+    </div>
+
+    <div class="popup-overlay" id="timeUpOverlay">
+      <div class="popup-content">
+        <h3>Time's Up!</h3>
+        <p>Do you want to add 15 minutes?</p>
+        <button class="close-popup" id="addTimeNowBtn">Add 15 Minutes</button>
+      </div>
+    </div>
+
+    <script src="solver-script.js"></script>
+</body>
+</html>
