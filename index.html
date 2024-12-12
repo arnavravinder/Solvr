@@ -1,67 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Solvr - IGCSE MCQs</title>
+    <title>Solvr</title>
+    <link rel="stylesheet" href="index-style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link 
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" 
-      rel="stylesheet"
-    >
-    <link 
-      rel="stylesheet" 
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" 
-      integrity="sha512-Fo3rlrZj/k7ujTnHHDNf/J6rp9e3qDmvQ/15Y0mJ92RdxN3cLxJ+E2OZ1PpR6M9Kyoauvvz4vQu2IbETTtoZmw==" 
-      crossorigin="anonymous" referrerpolicy="no-referrer"
-    />
-    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
-    <link rel="stylesheet" href="style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <nav class="navbar" data-aos="fade-down">
-        <div class="nav-logo">
-            <span>Solvr</span>
-        </div>
+    <nav class="navbar">
+        <a href="index.html">Home</a>
+        <a href="statistics.html">Statistics</a>
     </nav>
-    <header class="hero-section" data-aos="fade-up">
-        <div class="hero-text">
-            <h1>Solvr: IGCSE MCQ Solver</h1>
-            <p>Solvr makes it easy to practice and solve multiple-choice questions effortlessly.</p>
-        </div>
-    </header>
-    <section id="subject-selection" class="subjects" data-aos="fade-up">
-        <h2>Available Subjects</h2>
-        <div class="subject-card">
-            <div class="subject-icon">
-                <i class="fas fa-book-open"></i>
+    <div class="container">
+        <h1>Welcome to Solvr</h1>
+        <p>Select a subject to begin practicing MCQs.</p>
+        <div class="subjects">
+            <div class="subject-card">
+                <div>
+                    <h3>Economics 0455</h3>
+                    <p>Years: 2023-2025</p>
+                </div>
+                <button class="start-btn" onclick="window.location.href='economics.html'">Open</button>
             </div>
-            <div class="subject-info">
-                <h3>Economics</h3>
-                <p>Access MCQs.</p>
-                <button class="start-btn" onclick="redirectToEconomics()">Start Solving <i class="fas fa-arrow-right"></i></button>
+            <div class="subject-card">
+                <div>
+                    <h3>Chemistry 0620</h3>
+                    <p>Years: 2023-2025</p>
+                </div>
+                <button class="start-btn" onclick="window.location.href='chemistry.html'">Open</button>
             </div>
+            <div class="subject-card">
+                <div>
+                    <h3>Physics 0625</h3>
+                    <p>Coming Soon</p>
+                </div>
+                <button class="start-btn disabled-btn">Open</button>
+            </div>
+        
         </div>
-    </section>
-    <footer class="footer" data-aos="fade-up">
-        <p>Built with <span class="heart">❤️</span> by <a href="https://github.com/arnavravinder" target="_blank" rel="noopener">Arnav</a></p>
-    </footer>
-    
-    <!--
-    <div class="popup-overlay" id="popupOverlay">
-      <div class="popup-content">
-        <h3>Ready to Solve?</h3>
-        <p>Your MCQ session will begin shortly. Click continue to proceed.</p>
-        <button class="close-popup" onclick="redirectToEconomics()">Continue</button>
-        <button class="close-popup-alt" onclick="closePopup()">Cancel</button>
-      </div>
     </div>
-    -->
-
-    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
-    <script>
-      AOS.init({duration: 600, once: true});
-    </script>
-    <script src="script.js"></script>
+    <footer class="footer">
+        <p>Built with <span class="heart">❤️</span> by <a href="https://github.com/arnavravinder" target="_blank" rel="noopener" style="color:#76ABAE;">Arnav</a></p>
+    </footer>
 </body>
 </html>

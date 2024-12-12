@@ -1,32 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Solvr - MCQ Solver</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link 
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" 
-      rel="stylesheet"
-    >
     <link rel="stylesheet" href="solver-style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
     <nav class="navbar">
-        <div class="nav-logo">Solvr</div>
-        <div class="timer-container">
+        <a href="index.html">Home</a>
+        <a href="statistics.html">Statistics</a>
+        <div class="timer-container" id="timerContainer">
             <span>Time left: <span id="timer">45:00</span></span>
             <button id="add-time-btn">Add 15 Minutes</button>
         </div>
     </nav>
-    <div class="main-container">
+    <div class="main-container" id="mainContainer">
         <div class="pdf-viewer">
             <iframe id="pdfFrame" style="width:100%; height:100%;" frameborder="0"></iframe>
         </div>
         <div class="question-panel">
-            <h2>Questions</h2>
+            <h2 id="panelTitle">Questions</h2>
             <div id="questions-container"></div>
             <button id="submitAnswersBtn" class="submit-btn">Submit</button>
+            <button id="checkReviewBtn" class="submit-btn" style="display:none;">Check</button>
         </div>
     </div>
     <div class="scoreboard" id="scoreboard" style="display:none;">
@@ -68,6 +67,10 @@
         <p>Do you want to add 15 minutes?</p>
         <button class="close-popup" id="addTimeNowBtn">Add 15 Minutes</button>
       </div>
+    </div>
+
+    <div class="popup-overlay" id="reviewResultOverlay" style="display:none;">
+      <div class="popup-content" id="reviewResultContent"></div>
     </div>
 
     <script src="solver-script.js"></script>

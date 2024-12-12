@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Solvr - Economics</title>
-    <link rel="stylesheet" href="economics-style.css">
+    <title>Solvr - Chemistry</title>
+    <link rel="stylesheet" href="chemistry-style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
@@ -14,7 +14,7 @@
         <a href="statistics.html">Statistics</a>
     </nav>
     <main class="container">
-        <h1>Cambridge IGCSE Economics</h1>
+        <h1>Cambridge IGCSE Chemistry</h1>
         <p>Select the parameters for your MCQs:</p>
         <div class="section">
             <h2>Year</h2>
@@ -35,8 +35,8 @@
         <div class="section">
             <h2>Level</h2>
             <div class="button-group" id="level-group">
-                <button class="option-btn disabled" disabled>Core</button>
-                <button class="option-btn level-btn selected" data-level="Extended">Extended</button>
+                <button class="option-btn level-btn" data-level="Core">Core</button>
+                <button class="option-btn level-btn" data-level="Extended">Extended</button>
             </div>
         </div>
         <div class="section">
@@ -49,16 +49,10 @@
         </div>
         <button class="submit-btn" id="start-btn">Start</button>
     </main>
+    <script src="chemistry-script.js"></script>
     <footer class="footer">
         <p>Built with <span class="heart">❤️</span> by <a href="https://github.com/arnavravinder" target="_blank" rel="noopener" style="color:#76ABAE;">Arnav</a></p>
     </footer>
-    <div class="popup-overlay" id="popupOverlay">
-      <div class="popup-content">
-        <h3>Incomplete Selection</h3>
-        <p>Please complete all fields before starting.</p>
-        <button class="close-popup" id="closePopupBtn">Okay</button>
-      </div>
-    </div>
-    <script src="economics-script.js"></script>
+
 </body>
 </html>

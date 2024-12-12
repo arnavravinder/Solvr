@@ -105,35 +105,3 @@ p {
 .heart {
     color:red;
 }
-.popup-overlay {
-    position:fixed;
-    top:0;left:0;width:100%;height:100%;
-    background:rgba(0,0,0,0.6);
-    display:none;
-    justify-content:center;
-    align-items:center;
-    z-index:999;
-}
-.popup-content {
-    background:var(--dark-accent);
-    padding:2rem;
-    border-radius:8px;
-    text-align:center;
-    color:var(--light-text);
-    max-width:300px;
-    width:100%;
-}
-.close-popup {
-    margin-top:1rem;
-    background:var(--accent);
-    color:var(--light-text);
-    border:none;
-    padding:0.5rem 1rem;
-    border-radius:4px;
-    cursor:pointer;
-    font-weight:500;
-    transition:background var(--transition);
-}
-.close-popup:hover {
-    background:#86C0C3;
-}

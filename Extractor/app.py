@@ -1,7 +1,7 @@
 from PyPDF2 import PdfReader
 import json
 
-pdf_path = '0455_s24_ms_13.pdf' # replace with path
+pdf_path = '0620_w23_ms_11.pdf' # replace with path
 output_file = 'output.json'
 
 reader = PdfReader(pdf_path)
