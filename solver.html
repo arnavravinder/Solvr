@@ -1,22 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Solvr - MCQ Solver</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solvr</title>
     <link rel="stylesheet" href="solver-style.css">
+    <link rel="stylesheet" href="global-styles.css">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
+    <div class="loader-overlay" id="loaderOverlay">
+        <img src="loader.svg" class="loader-img" alt="Loading..."/>
+        <div class="loader-text">Loading...</div>
+    </div>
     <nav class="navbar">
-        <a href="index.html">Home</a>
+        <img src="logo.svg" class="logo-img" alt="Logo">
+        <a href="index.html" class="logo-text">Solvr.</a>
         <a href="statistics.html">Statistics</a>
         <div class="timer-container" id="timerContainer">
-            <span>Time left: <span id="timer">45:00</span></span>
+            <span>Time left: <span id="timer">00:00</span></span>
             <button id="add-time-btn">Add 15 Minutes</button>
         </div>
     </nav>
+
     <div class="main-container" id="mainContainer">
         <div class="pdf-viewer">
             <iframe id="pdfFrame" style="width:100%; height:100%;" frameborder="0"></iframe>
@@ -53,14 +61,13 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Your Answer</th>
-                    <th>Correct Answer</th>
+                    <th>Your Answer(s)</th>
+                    <th>Correct Answer(s)</th>
                 </tr>
             </thead>
             <tbody id="answers-body"></tbody>
         </table>
     </div>
-
     <div class="popup-overlay" id="timeUpOverlay">
       <div class="popup-content">
         <h3>Time's Up!</h3>
@@ -68,11 +75,36 @@
         <button class="close-popup" id="addTimeNowBtn">Add 15 Minutes</button>
       </div>
     </div>
-
     <div class="popup-overlay" id="reviewResultOverlay" style="display:none;">
       <div class="popup-content" id="reviewResultContent"></div>
     </div>
-
     <script src="solver-script.js"></script>
+    <script>document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+          const loader = document.getElementById('loaderOverlay');
+          if (loader) {
+            loader.remove(); // Completely remove the loader from the DOM
+          }
+        }, 500);
+      });
+      </script>
+
+    <script type="module">
+  // import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js';
+  // import { getAnalytics } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-analytics.js';
+
+  // const firebaseConfig = {
+  //   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  //   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  //   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  //   storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  //   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  //   appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  //   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
+  // };
+  // const app = initializeApp(firebaseConfig);
+  // const analytics = getAnalytics(app);
+</script>
+
 </body>
 </html>
