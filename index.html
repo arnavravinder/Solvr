@@ -5,16 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Solvr</title>
     <link rel="stylesheet" href="index-style.css">
+    <link rel="stylesheet" href="global-styles.css">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
+ <div class="loader-overlay" id="loaderOverlay">
+    <img src="loader.svg" class="loader-img" alt="Loading..."/>
+    <div class="loader-text">Loading...</div>
+</div> 
     <nav class="navbar">
-        <a href="index.html">Home</a>
+        <img src="logo.svg" class="logo-img" alt="Logo">
+        <a href="index.html" class="logo-text">Solvr.</a>
         <a href="statistics.html">Statistics</a>
     </nav>
     <div class="container">
-        <h1>Welcome to Solvr</h1>
+        <h1>Welcome to Solvr ✨</h1>
         <p>Select a subject to begin practicing MCQs.</p>
         <div class="subjects">
             <div class="subject-card">
@@ -45,11 +52,45 @@
                 </div>
                 <button class="start-btn" onclick="window.location.href='biology.html'">Open</button>
             </div>
+            <div class="subject-card">
+                <div>
+                    <h3>French [0520]</h3>
+                    <p>Years: 2022-2027</p>
+                </div>
+                <button class="start-btn" onclick="window.location.href='french.html'">Open</button>
+            </div>
 
         </div>
     </div>
     <footer class="footer">
         <p>Built with <span class="heart">❤️</span> by <a href="https://github.com/arnavravinder" target="_blank" rel="noopener" style="color:#76ABAE;">Arnav</a></p>
     </footer>
+    <script>document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+          const loader = document.getElementById('loaderOverlay');
+          if (loader) {
+            loader.remove(); // Completely remove the loader from the DOM
+          }
+        }, 2500);
+      });
+      </script>
+
+    <script type="module">
+  // import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js';
+  // import { getAnalytics } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-analytics.js';
+
+  // const firebaseConfig = {
+  //   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  //   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  //   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  //   storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  //   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  //   appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  //   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
+  // };
+  // const app = initializeApp(firebaseConfig);
+  // const analytics = getAnalytics(app);
+</script>
+
 </body>
 </html>
