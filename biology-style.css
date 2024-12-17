@@ -89,7 +89,7 @@ p {
     font-weight:500;
     transition:background var(--transition);
 }
-.submit-btn:hover { 
+.submit-btn:hover {
     background:#388E3C;
 }
 .footer {
