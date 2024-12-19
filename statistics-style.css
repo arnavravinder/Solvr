@@ -63,3 +63,42 @@ td {
 .review-btn:hover {
     background:#86C0C3;
 }
+
+/* New additions for filter bar and buttons */
+.filter-bar {
+    display:flex;
+    align-items:center;
+    gap:1rem;
+    margin-bottom:1.5rem;
+    justify-content:center;
+}
+
+.filter-bar select,
+.filter-bar button {
+    background:var(--accent);
+    color:var(--light-text);
+    border:none;
+    border-radius:4px;
+    padding:0.5rem 1rem;
+    cursor:pointer;
+    font-weight:500;
+    transition:background var(--transition);
+}
+
+.filter-bar select:hover,
+.filter-bar button:hover {
+    background:#86C0C3;
+}
+
+.delete-btn {
+    background:red;
+    color:#fff;
+    border:none;
+    padding:0.5rem 1rem;
+    border-radius:4px;
+    cursor:pointer;
+    font-weight:500;
+}
+.delete-btn:hover {
+    background:#c00;
+}
