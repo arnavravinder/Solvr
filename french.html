@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Solvr - French</title>
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="global-styles.css">
+    <link rel="stylesheet" href="styles/french-style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+<!-- <div class="loader-overlay" id="loaderOverlay">
+    <img src="loader.svg" class="loader-img" alt="Loading..."/>
+    <div class="loader-text">Loading...</div>
+</div> -->
+    <nav class="navbar">
+        <img src="assets/logo.svg" class="logo-img" alt="Logo">
+        <a href="index.html" class="logo-text">Solvr.</a>
+        <a href="statistics.html">Statistics</a>
+    </nav>
+    <main class="container">
+        <h1>Cambridge IGCSE French (Listening)</h1>
+        <p>Select the parameters for your MCQs:</p>
+        <div class="section">
+            <h2>Year</h2>
+            <div class="button-group" id="year-group">
+                <button class="option-btn year-btn" data-year="2022">2022</button>
+                <button class="option-btn year-btn" data-year="2023">2023</button>
+                <button class="option-btn year-btn" data-year="2024">2024</button>
+                <button class="option-btn disabled" disabled data-year="2025">2025</button>
+                <button class="option-btn disabled" disabled data-year="2026">2026</button>
+                <button class="option-btn disabled" disabled data-year="2027">2027</button>
+            </div>
+        </div>
+        <div class="section">
+            <h2>Month</h2>
+            <div class="button-group" id="month-group">
+                <button class="option-btn month-btn" data-month="m" data-name="Feb/March">Feb/March</button>
+                <button class="option-btn month-btn" data-month="s" data-name="May/June">May/June</button>
+                <button class="option-btn month-btn" data-month="w" data-name="Oct/Nov">Oct/Nov</button>
+            </div>
+        </div>
+        <div class="section">
+            <h2>Variant</h2>
+            <div class="button-group" id="variant-group">
+                <button class="option-btn variant-btn" data-variant="1">1</button>
+                <button class="option-btn variant-btn" data-variant="2">2</button>
+                <button class="option-btn variant-btn" data-variant="3">3</button>
+            </div>
+        </div>
+        <button class="submit-btn" id="start-btn">Start</button>
+    </main>
+    <footer class="footer">
+        <p>Built with <span class="heart">❤️</span> by <a href="https://github.com/arnavravinder" target="_blank" rel="noopener" style="color:#76ABAE;">Arnav</a></p>
+    </footer>
+    <div class="popup-overlay" id="incompletePopup">
+      <div class="popup-content">
+        <h3>Incomplete Selection</h3>
+        <p>Please complete year, month, and variant selection before starting.</p>
+        <button class="close-popup" id="closeIncompletePopup">OK</button>
+      </div>
+    </div>
+    <script src="scripts/french-script.js"></script>
+<!-- 
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+      const loader = document.getElementById('loaderOverlay');
+      if (loader) {
+        loader.remove(); // Completely remove the loader from the DOM
+      }
+    }, 500);
+  });
+</script>
+-->
+
+    <script type="module">
+  // import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js';
+  // import { getAnalytics } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-analytics.js';
+
+  // const firebaseConfig = {
+  //   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  //   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  //   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  //   storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  //   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  //   appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  //   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
+  // };
+  // const app = initializeApp(firebaseConfig);
+  // const analytics = getAnalytics(app);
+</script>
+
+</body>
+</html>

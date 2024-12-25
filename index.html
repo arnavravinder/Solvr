@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Solvr</title>
+    <link rel="stylesheet" href="styles/index-style.css">
+    <link rel="stylesheet" href="global-styles.css">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <meta name="description" content="Solvr makes practicing IGCSE MCQs easy. Select your subject and parameters, and get instant feedback to improve your performance." />
+
+<!-- Open Graph -->
+<meta property="og:title" content="Solvr - IGCSE MCQ Practice" />
+<meta property="og:description" content="Solvr makes practicing IGCSE MCQs easy. Select your subject and parameters, and get instant feedback to improve your performance." />
+<meta property="og:image" content="https://cloud-mp5dfacdi-hack-club-bot.vercel.app/0black_blue_tosca_bold_gradient_experiencing_a_blue_screen_youtube_thumbnail_.png" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://solvr.in" />
+
+<!-- Twitter Cards -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Solvr - IGCSE MCQ Practice" />
+<meta name="twitter:description" content="Solvr makes practicing IGCSE MCQs easy. Select your subject and parameters, and get instant feedback to improve your performance." />
+<meta name="twitter:image" content="https://cloud-mp5dfacdi-hack-club-bot.vercel.app/0black_blue_tosca_bold_gradient_experiencing_a_blue_screen_youtube_thumbnail_.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+ <div class="loader-overlay" id="loaderOverlay">
+    <img src="assets/loader.svg" class="loader-img" alt="Loading..."/>
+    <div class="loader-text">Loading...</div>
+</div> 
+    <nav class="navbar">
+        <img src="assets/logo.svg" class="logo-img" alt="Logo">
+        <a href="index.html" class="logo-text">Solvr.</a>
+        <a href="statistics.html">Statistics</a>
+    </nav>
+    <div class="container">
+        <h1>Welcome to Solvr ✨</h1>
+        <p>Select a subject to begin practicing MCQs.</p>
+        <div class="subjects">
+            <div class="subject-card">
+                <div>
+                    <h3>Economics [0455]</h3>
+                    <p>Years: 2023-2025</p>
+                </div>
+                <button class="start-btn" onclick="window.location.href='economics.html'">Open</button>
+            </div>
+            <div class="subject-card">
+                <div>
+                    <h3>Physics [0625]</h3>
+                    <p>Years: 2023-2025</p>
+                </div>
+                <button class="start-btn" onclick="window.location.href='physics.html'">Open</button>
+            </div>
+            <div class="subject-card">
+                <div>
+                    <h3>Chemistry [0620]</h3>
+                    <p>Years: 2023-2025</p>
+                </div>
+                <button class="start-btn" onclick="window.location.href='chemistry.html'">Open</button>
+            </div>
+            <div class="subject-card">
+                <div>
+                    <h3>Biology [0610]</h3>
+                    <p>Years: 2023-2025</p>
+                </div>
+                <button class="start-btn" onclick="window.location.href='biology.html'">Open</button>
+            </div>
+            <div class="subject-card">
+                <div>
+                    <h3>French [0520]</h3>
+                    <p>Years: 2022-2027</p>
+                </div>
+                <button class="start-btn" onclick="window.location.href='french.html'">Open</button>
+            </div>
+
+        </div>
+    </div>
+    <footer class="footer">
+        <p>Built with <span class="heart">❤️</span> by <a href="https://github.com/arnavravinder" target="_blank" rel="noopener" style="color:#76ABAE;">Arnav</a></p>
+    </footer>
+    <script>document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+          const loader = document.getElementById('loaderOverlay');
+          if (loader) {
+            loader.remove(); // Completely remove the loader from the DOM
+          }
+        }, 2500);
+      });
+      </script>
+
+    <script type="module">
+  // import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js';
+  // import { getAnalytics } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-analytics.js';
+
+  // const firebaseConfig = {
+  //   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  //   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  //   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  //   storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  //   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  //   appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  //   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
+  // };
+  // const app = initializeApp(firebaseConfig);
+  // const analytics = getAnalytics(app);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Solvr - Statistics</title>
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="global-styles.css">
+    <link rel="stylesheet" href="styles/statistics-style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link 
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    >
+    <script type="module">
+      import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js';
+      import { getAnalytics } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-analytics.js';
+      const firebaseConfig = {
+        apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+        authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+        projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+        storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+        messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+        appId: import.meta.env.VITE_FIREBASE_APP_ID,
+        measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
+      };
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+    </script>
+</head>
+<body>
+    <div class="loader-overlay" id="loaderOverlay">
+        <img src="assets/loader.svg" class="loader-img" alt="Loading..."/>
+        <div class="loader-text">Loading...</div>
+    </div>
+    <nav class="navbar">
+        <a href="index.html">Home</a>
+        <a href="statistics.html">Statistics</a>
+    </nav>
+    <div class="container">
+        <h1>Your Past Attempts</h1>
+        <div class="filter-bar">
+            <label for="subjectFilter">Filter by Subject:</label>
+            <select id="subjectFilter">
+                <option value="All">All</option>
+                <option value="Economics">Economics</option>
+                <option value="Chemistry">Chemistry</option>
+                <option value="Biology">Biology</option>
+                <option value="Physics">Physics</option>
+                <option value="French">French</option>
+            </select>
+            <button id="deleteAllBtn">Delete All</button>
+        </div>
+        <table id="resultsTable">
+            <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>Paper Code</th>
+                    <th>Score (%)</th>
+                    <th>Review (%)</th>
+                    <th>Date</th>
+                    <th>Review</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody id="resultsBody"></tbody>
+        </table>
+    </div>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+          const loader = document.getElementById('loaderOverlay');
+          if (loader) {
+            loader.remove(); 
+          }
+        },500);
+      });
+    </script>
+    <script src="scripts/statistics-script.js"></script>
+</body>
+</html>

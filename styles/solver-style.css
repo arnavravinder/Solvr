@@ -1,0 +1,385 @@
+:root {
+    --dark-bg:#222831;
+    --dark-accent:#31363F;
+    --accent:#76ABAE;
+    --light-text:#EEEEEE;
+    --transition:0.3s;
+    --font-sans:'Inter',sans-serif;
+}
+
+/* Minimal custom scrollbars: rectangular, gray */
+::-webkit-scrollbar {
+    width:8px;
+    background:#2A2A2A; 
+}
+::-webkit-scrollbar-thumb {
+    background:#555;
+    border-radius:0; /* no rounding for rectangular thumbs */
+}
+::-webkit-scrollbar-thumb:hover {
+    background:#666;
+}
+
+/* A–F color-coded backgrounds */
+.option-btn[data-letter="A"] { background:#2196F3; }
+.option-btn[data-letter="B"] { background:#F44336; }
+.option-btn[data-letter="C"] { background:#4CAF50; }
+.option-btn[data-letter="D"] { background:#FFC107; color:#000; }
+.option-btn[data-letter="E"] { background:#9C27B0; }
+.option-btn[data-letter="F"] { background:#E91E63; }
+
+body {
+    margin:0;
+    font-family:var(--font-sans);
+    background:var(--dark-bg);
+    color:var(--light-text);
+    overflow:hidden; 
+}
+
+.navbar {
+    display:flex;
+    gap:1rem;
+    background:var(--dark-accent);
+    padding:1rem;
+    align-items:center;
+}
+.navbar .logo-img {
+    width:24px;
+    height:24px;
+}
+.logo-text {
+    font-weight:600;
+    font-size:1.2rem;
+    color:var(--accent);
+    text-decoration:none;
+}
+.navbar a {
+    color:var(--accent);
+    text-decoration:none;
+    font-weight:500;
+}
+.navbar a:hover {
+    text-decoration:underline;
+}
+
+/* Timer container & icons */
+.timer-container {
+    margin-left:auto;
+    display:flex;
+    align-items:center;
+    gap:0.5rem;
+}
+.icon-btn {
+    background:none;
+    border:none;
+    width:24px;
+    height:24px;
+    cursor:pointer;
+    background-repeat:no-repeat;
+    background-position:center;
+    background-size:contain;
+    transition:filter 0.2s;
+}
+.mini-btn {
+    background:var(--accent);
+    color:#EEE;
+    border:none;
+    padding:0.3rem 0.6rem;
+    border-radius:4px;
+    cursor:pointer;
+    font-weight:500;
+    font-size:0.75rem;
+    transition:background var(--transition);
+}
+.mini-btn:hover {
+    background:#86C0C3;
+}
+
+/* Loader overlay */
+.loader-overlay {
+    position:fixed;
+    top:0;left:0;width:100%;height:100%;
+    background:#76ABAE;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+}
+.loader-img {
+    width:80px;
+    height:80px;
+    animation:loaderAnim 1.5s infinite alternate ease-in-out;
+}
+@keyframes loaderAnim {
+    0% { transform:scale(1); }
+    100% { transform:scale(1.2); }
+}
+.loader-text {
+    margin-top:1rem;
+    color:#FFF;
+    font-size:1.2rem;
+    font-weight:600;
+}
+
+/* Main layout: PDF left, questions right */
+.main-container {
+    display:flex;
+    height:calc(100vh - 60px);
+}
+.pdf-viewer {
+    flex:3;
+    border-right:2px solid var(--accent);
+    padding:0.5rem;
+    overflow:auto;
+}
+.question-panel {
+    flex:1;
+    padding:1rem;
+    overflow-y:auto;
+    overflow-x:hidden; 
+    background: var(--dark-accent);
+}
+.question-panel h2 {
+    margin-top:0;
+    color:var(--accent);
+    margin-bottom:0.5rem;
+}
+
+/* Counters bar (label above, value below) */
+.counters {
+    display:flex;
+    gap:0.5rem;
+    margin-bottom:0.5rem;
+    font-size:0.85rem;
+}
+.counter-box {
+    background:#444;
+    padding:0.4rem 0.8rem;
+    border-radius:6px;
+    text-align:center;
+    min-width:60px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+}
+.counter-label {
+    font-size:0.75rem;
+    margin-bottom:0.2rem;
+    white-space:nowrap;
+    font-weight:500;
+}
+.counter-value {
+    font-size:1rem;
+    font-weight:600;
+    margin:0;
+}
+.flag-icon {
+    width:14px;
+    height:14px;
+    object-fit:contain;
+}
+
+/* Up/down icon tinted to accent color for question grid toggle. 
+   by default we show up-icon => grid is open. */
+.toggle-menu-btn {
+    margin-bottom:0.5rem;
+    width:24px;
+    height:24px;
+    border:none;
+    cursor:pointer;
+    transition:filter 0.2s;
+    filter: invert(51%) sepia(16%) saturate(356%) hue-rotate(139deg) brightness(95%) contrast(92%);
+}
+.toggle-menu-btn:hover {
+    filter: brightness(0.9) invert(51%) sepia(16%) saturate(356%) hue-rotate(139deg) brightness(95%) contrast(92%);
+}
+.down-icon {
+    background:url('../assets/down.png') no-repeat center/contain;
+}
+.up-icon {
+    background:url('../assets/up.png') no-repeat center/contain;
+}
+
+/* question-grid for question #s */
+.question-grid {
+    display:flex;
+    flex-wrap:wrap;
+    gap:0.3rem;
+    margin-bottom:1rem;
+}
+.qnum-btn {
+    width:22px;
+    height:22px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:#555;
+    border:2px dotted #999;
+    border-radius:4px;
+    cursor:pointer;
+    font-weight:600;
+    color:#fff;
+    transition:background 0.2s,border-color 0.2s;
+    font-size:0.6rem;
+}
+.qnum-btn.answered {
+    background:var(--accent);
+    border-color:transparent;
+}
+.qnum-btn.flagged {
+    background:#E91E63;
+    border-color:transparent;
+    color:#fff;
+}
+.qnum-btn:hover {
+    filter:brightness(0.9);
+}
+
+/* The questions container below the grid */
+#questions-container {
+    display:flex;
+    flex-direction:column;
+    gap:1rem;
+    margin-top:0.5rem;
+}
+.question-block {
+    border:1px solid #666;
+    padding:0.5rem;
+    background:#444;
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    gap:0.5rem;
+}
+.question-block h3 {
+    margin-top:0;
+    color:#EEE;
+    margin-bottom:0.3rem;
+}
+.options {
+    display:flex;
+    flex-wrap:wrap;
+    gap:0.4rem;
+}
+.option-btn {
+    color:#fff;
+    border:none;
+    padding:0.4rem 0.6rem;
+    border-radius:4px;
+    cursor:pointer;
+    font-weight:600;
+    transition:background var(--transition);
+    font-size:0.75rem;
+}
+.option-btn:hover {
+    filter:brightness(0.9);
+}
+.option-btn.selected {
+    border:2px solid #000;
+}
+
+/* Flag button top-right: grey => pink if flagged */
+.flag-btn {
+    position:absolute;
+    top:8px;
+    right:8px;
+    width:20px;
+    height:20px;
+    border:none;
+    cursor:pointer;
+    background:url("../assets/flag.png") center/contain no-repeat;
+    filter: grayscale(100%);
+    transition:filter 0.2s,transform 0.2s;
+}
+.flag-btn.flagged {
+    filter:none; 
+    transform:scale(1.1);
+}
+
+/* Submit, check, back-home, etc. */
+.submit-btn {
+    margin-top:1rem;
+    padding:0.5rem 1rem;
+    background:#4CAF50;
+    color:#fff;
+    font-weight:600;
+    border:none;
+    border-radius:4px;
+    cursor:pointer;
+    transition: background var(--transition);
+    font-size:0.9rem;
+}
+.submit-btn:hover {
+    background:#388E3C;
+}
+
+/* Scoreboard after finishing */
+.scoreboard {
+    padding:1rem;
+}
+.scoreboard h2 {
+    margin-top:0;
+    margin-bottom:1rem;
+    text-align:center;
+}
+.scoreboard table {
+    width:100%;
+    border-collapse:collapse;
+    margin-top:1rem;
+    color:#EEE;
+    background: var(--dark-accent);
+}
+.scoreboard th, .scoreboard td {
+    border:1px solid #666;
+    padding:0.5rem;
+    text-align:center;
+    font-size:0.9rem;
+}
+.answers-table tbody td.user-wrong {
+    background:#F44336;
+}
+
+/* Popups, etc. */
+.popup-overlay {
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.6);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:999;
+}
+.popup-content {
+    background: var(--dark-accent);
+    padding:1.5rem;
+    border-radius:8px;
+    text-align:center;
+    color:#EEE;
+    max-width:300px;
+    width:100%;
+}
+.close-popup {
+    margin-top:1rem;
+    background: var(--accent);
+    color:#EEE;
+    border:none;
+    padding:0.5rem 1rem;
+    border-radius:4px;
+    cursor:pointer;
+    font-weight:500;
+    transition: background var(--transition);
+    font-size:0.8rem;
+}
+.close-popup:hover {
+    background:#86C0C3;
+}
+
+@keyframes loaderAnim {
+    0% { transform:scale(1); }
+    100% { transform:scale(1.2); }
+}

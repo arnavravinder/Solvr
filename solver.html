@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Solvr - Solver</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+
+  <!-- Global styles in same directory as HTML -->
+  <link rel="stylesheet" href="global-styles.css">
+  <!-- Main solver page styles in the /styles folder -->
+  <link rel="stylesheet" href="styles/solver-style.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link 
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap"
+    rel="stylesheet"
+  >
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js';
+    import { getAnalytics } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-analytics.js';
+    const firebaseConfig = {
+      apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+      authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+      projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+      storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+      messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+      appId: import.meta.env.VITE_FIREBASE_APP_ID,
+      measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
+    };
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+  </script>
+</head>
+<body>
+  <div class="loader-overlay" id="loaderOverlay">
+    <img src="assets/loader.svg" class="loader-img" alt="Loading..."/>
+    <div class="loader-text">Loading...</div>
+  </div>
+
+  <nav class="navbar">
+    <img src="assets/logo.svg" class="logo-img" alt="Logo">
+    <a href="index.html" class="logo-text">Solvr.</a>
+    <a href="statistics.html">Statistics</a>
+    <div class="timer-container" id="timerContainer">
+      <span>Time left: <span id="timer">00:00</span></span>
+      <!-- Pause/resume icons swapped in JS -->
+      <button id="pauseBtn" class="icon-btn" style="margin-left:0.5rem;"></button>
+      <!-- Styled +15 Min button -->
+      <button id="add-time-btn" class="mini-btn" style="margin-left:0.5rem;">+15 Min</button>
+    </div>
+  </nav>
+
+  <div class="main-container" id="mainContainer">
+    <div class="pdf-viewer">
+      <iframe id="pdfFrame" style="width:100%; height:100%;" frameborder="0"></iframe>
+    </div>
+    <div class="question-panel">
+      <h2 id="panelTitle">Questions</h2>
+
+      <div class="counters">
+        <div class="counter-box">
+          <div class="counter-label">Answered</div>
+          <div class="counter-value" id="answeredCount">0</div>
+        </div>
+        <div class="counter-box">
+          <div class="counter-label">Unanswered</div>
+          <div class="counter-value" id="unansweredCount">0</div>
+        </div>
+        <div class="counter-box">
+          <div class="counter-label">
+            <img src="assets/flag.png" alt="Flag" class="flag-icon" />
+          </div>
+          <div class="counter-value" id="flaggedCount">0</div>
+        </div>
+      </div>
+
+      <!-- Grid visible by default => up icon -->
+      <button id="toggleMenuBtn" class="toggle-menu-btn up-icon"></button>
+
+      <div class="question-grid" id="questionGrid"></div>
+
+      <div id="questions-container"></div>
+      <button id="submitAnswersBtn" class="submit-btn">Submit</button>
+      <button id="checkReviewBtn" class="submit-btn" style="display:none;">Check</button>
+    </div>
+  </div>
+
+  <div class="scoreboard" id="scoreboard" style="display:none;">
+    <h2>Your Answers & Score!</h2>
+    <div class="score-summary">
+      <table>
+        <thead>
+          <tr>
+            <th>Your Score</th>
+            <th>Total Questions</th>
+            <th>% Correct</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td id="userScore"></td>
+            <td id="totalQuestions"></td>
+            <td id="percentCorrect"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>Answers</h3>
+    <table class="answers-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Your Answer(s)</th>
+          <th>Correct Answer(s)</th>
+        </tr>
+      </thead>
+      <tbody id="answers-body"></tbody>
+    </table>
+    <button id="backHomeBtn" class="submit-btn" style="margin-top:1rem;">Back to Home</button>
+  </div>
+
+  <div class="popup-overlay" id="timeUpOverlay">
+    <div class="popup-content">
+      <h3>Time's Up!</h3>
+      <p>Do you want to add 15 minutes?</p>
+      <button class="close-popup" id="addTimeNowBtn">Add 15 Minutes</button>
+    </div>
+  </div>
+  <div class="popup-overlay" id="reviewResultOverlay" style="display:none;">
+    <div class="popup-content" id="reviewResultContent"></div>
+  </div>
+
+  <!-- Duplicates popup for Q15–19 in French -->
+  <div class="popup-overlay" id="duplicatesOverlay" style="display:none;">
+    <div class="popup-content">
+      <h3>Duplicates Found in Q15–19</h3>
+      <p>Please ensure each letter in Q15–19 is unique before submitting.</p>
+      <button class="close-popup" id="closeDuplicatesPopup">OK</button>
+    </div>
+  </div>
+
+  <script src="scripts/solver-script.js"></script>
+</body>
+</html>

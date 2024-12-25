@@ -1,0 +1,103 @@
+:root {
+    --dark-bg: #222831;
+    --dark-accent: #31363F;
+    --accent: #76ABAE;
+    --light-text: #EEEEEE;
+    --transition: 0.3s;
+    --font-sans: 'Inter', sans-serif;
+}
+
+body {
+    margin:0;
+    font-family: var(--font-sans);
+    background: var(--dark-bg);
+    color: var(--light-text);
+}
+
+.navbar {
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:1rem;
+    background: var(--dark-accent);
+    border-bottom:1px solid #444;
+}
+
+.nav-logo {
+    font-size:1.2rem;
+    font-weight:600;
+    color: var(--accent);
+}
+
+.main-container {
+    display:flex;
+    height:calc(100vh - 60px);
+}
+
+.pdf-viewer {
+    flex:3;
+    border-right:2px solid var(--accent);
+    padding:0.5rem;
+}
+
+.question-panel {
+    flex:1;
+    padding:1rem;
+    overflow-y:auto;
+    background: var(--dark-accent);
+}
+
+.question-panel h2 {
+    margin-top:0;
+    color: var(--accent);
+}
+
+#questions-container {
+    display:flex;
+    flex-direction:column;
+    gap:1rem;
+    margin-top:1rem;
+}
+
+.question-block {
+    border:1px solid #666;
+    padding:0.5rem;
+    background:#444;
+}
+
+.question-block h3 {
+    margin-top:0;
+}
+
+.options {
+    display:flex;
+    gap:0.5rem;
+    margin-top:0.5rem;
+}
+
+.option-btn {
+    background:#2196F3;
+    color:#fff;
+    border:none;
+    padding:0.5rem 0.75rem;
+    border-radius:4px;
+    cursor:pointer;
+    font-weight:600;
+}
+
+.option-btn.selected {
+    border:3px solid #000;
+}
+
+.option-btn:nth-child(2) {
+    background:#F44336;
+}
+
+.option-btn:nth-child(3) {
+    background:#4CAF50;
+}
+
+.option-btn:nth-child(4) {
+    background:#FFC107;
+    color:#000;
+}
