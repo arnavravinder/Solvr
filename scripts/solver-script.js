@@ -124,7 +124,7 @@ function checkQ15to19Duplicates(){
   return true;
 }
 
-// Calculate marks (including partial credit for Q35–37)
+// calc marks (including partial credit for Q35–37)
 function calculateMarks(i, ans, ca){
   if(!ca) return 0;
   if(!ans) ans=[];
@@ -210,12 +210,12 @@ function createQuestionBlock(i){
   const block=document.createElement('div');
   block.className='question-block';
 
-  // Title
+  // title
   const title=document.createElement('h3');
   title.textContent=`Question ${qNum}`;
   block.appendChild(title);
 
-  // Flag button
+  // flag btn
   const flagBtn=document.createElement('button');
   flagBtn.className='flag-btn';
   flagBtn.addEventListener('click',()=>{
@@ -233,7 +233,7 @@ function createQuestionBlock(i){
   // Options
   let options=['A','B','C','D'];
   if(subject==='French'){
-    // adapt QNum-based options
+    // adapt QNum-based options french only
     if(qNum>=1&&qNum<=14) options=['A','B','C','D'];
     else if(qNum>=15&&qNum<=19) options=['A','B','C','D','E','F'];
     else if(qNum>=20&&qNum<=28) options=['A','B','C'];
@@ -351,7 +351,7 @@ function submitAnswers(){
   localStorage.setItem('solvrResults',JSON.stringify(storedResults));
 }
 
-// ----- INIT -----
+// init
 if(reviewIndex!==null){
   // REVIEW MODE
   let attempt=storedResults[reviewIndex];
