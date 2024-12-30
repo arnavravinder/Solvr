@@ -29,11 +29,14 @@
 ![Solving Page](https://i.ibb.co/G3BxbL3/solving.png)
 
 ## Planned Features 💡
-
-- [ ] **AI Integration** – Offer hints or explanations for tricky questions  
-- [ ] **Detailed Wrong-Answer Analysis** – Show reasons why certain MCQs were missed, with extra tips for improvement
-- [ ] **AS/A Level Support** – Add support for AS & A Levels
+- [ ] **Rate the Paper** – Allow users to rate how easy or hard the paper was  
+- [ ] **Import Papers and Mark Schemes** – Add functionality to upload papers and mark schemes that aren't on Solvr  
+- [ ] **Graph and Performance Tracking** – Include graphical performance tracking for users  
+- [ ] **Grade Thresholds** – Display grade thresholds for papers  
 - [ ] **Mobile Support** – Add support for mobile devices  
+- [ ] **AI Integration** – Offer hints or explanations for tricky questions  
+- [ ] **Detailed Wrong-Answer Analysis** – Show reasons why certain MCQs were missed, with extra tips for improvement  
+- [ ] **AS/A Level Support** – Add support for AS & A Levels  
 
 ## Issues / Feedback 🔧
 
