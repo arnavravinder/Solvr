@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SolvrAI Beta</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://raw.githack.com/eKoopmans/html2pdf/master/dist/html2pdf.bundle.js"></script>
+  <style>
+    :root {
+      --color-accent: #76ABAE;
+      --color-background: #222831;
+      --color-secondary-accent: #31363F;
+      --color-text-primary: #EEEEEE;
+      --color-text-secondary: #B0B3B8;
+      --color-success: #66C15E;
+      --color-warning: #F6B042;
+      --color-error: #E2201C;
+      --color-hover: #86C0C3;
+      --color-selected-option: #444C56;
+      --color-border: #444;
+      --color-scrollbar: #666;
+      --color-flag-inactive: #999;
+      --color-flag-active: #FF6F61;
+      --color-highlight: #76ABAE;
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background-color: var(--color-background);
+      color: var(--color-text-primary);
+      font-family: 'Poppins', sans-serif;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .navbar {
+      display: flex;
+      gap: 1rem;
+      background: var(--dark-accent);
+      padding: 1rem;
+    }
+    .navbar a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .navbar a:hover {
+      text-decoration: underline;
+    }
+    .navbar .logo-img {
+      width: 30px;
+      height: 30px;
+      margin-right: 0.5rem;
+    }
+    .navbar .logo-text {
+      font-weight: 700;
+      font-size: 1.6rem;
+    }
+    .main-container {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+    .pdf-viewer {
+      width: 60%;
+      background-color: var(--color-secondary-accent);
+      border-right: 1px solid var(--color-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .pdf-viewer iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    .questions-panel {
+      width: 40%;
+      padding: 1rem;
+      overflow-y: auto;
+      background-color: var(--color-background);
+    }
+    .questions-panel h1,
+    .questions-panel h2,
+    .questions-panel label {
+      color: var(--color-accent);
+      margin-bottom: 0.5rem;
+    }
+    .question-block {
+      background-color: var(--color-secondary-accent);
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border: 1px solid var(--color-border);
+      border-radius: 5px;
+    }
+    .answer-input {
+      width: 100%;
+      min-height: 3rem;
+      margin-bottom: 0.5rem;
+      padding: 0.5rem;
+      background-color: var(--color-background);
+      color: var(--color-text-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 3px;
+      resize: vertical;
+    }
+    .answer-input:focus {
+      outline: 1px solid var(--color-accent);
+    }
+    .short-answer-group {
+      display: flex;
+      flex-direction: column;
+    }
+    .dropdown-select {
+      width: 40%;
+      margin-bottom: 0.5rem;
+      padding: 0.3rem;
+      background-color: var(--color-background);
+      color: var(--color-text-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 3px;
+    }
+    .check-button {
+      display: inline-block;
+      margin-top: 1rem;
+      background-color: var(--color-accent);
+      color: var(--color-text-primary);
+      border: none;
+      border-radius: 4px;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      margin-right: 0.5rem;
+    }
+    .check-button:hover {
+      background-color: var(--color-hover);
+    }
+    .questions-panel::-webkit-scrollbar {
+      width: 8px;
+    }
+    .questions-panel::-webkit-scrollbar-track {
+      background: var(--color-secondary-accent);
+    }
+    .questions-panel::-webkit-scrollbar-thumb {
+      background-color: var(--color-scrollbar);
+      border-radius: 4px;
+    }
+    .gemini-badge {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      background-color: #fff;
+      color: #E15750;
+      border-radius: 20px;
+      border: 1px solid #E15750;
+      padding: 0.3rem 0.7rem;
+      display: inline-flex;
+      align-items: center;
+      font-weight: 700;
+      z-index: 9999;
+    }
+    .gemini-badge img {
+      height: 20px;
+      margin-left: 0.5rem;
+    }
+    #gemini-feedback {
+      white-space: pre-wrap;
+      background: var(--color-secondary-accent);
+      padding: 1rem;
+      margin-top: 1rem;
+      border-radius: 5px;
+      border: 1px solid var(--color-border);
+    }
+    .score-highlight {
+      color: var(--color-success);
+      font-weight: 700;
+    }
+    /* Container for PDF export */
+    #pdf-content {
+      margin-top: 1rem;
+      background-color: var(--color-secondary-accent);
+      padding: 1rem;
+      border: 1px solid var(--color-border);
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <img src="logo.svg" class="logo-img" alt="Logo">
+    <a href="https://solvr.in" class="logo-text">Solvr AI.</a>
+  </nav>
+
+  <div class="main-container">
+    <div class="pdf-viewer">
+      <iframe src="0520_w24_qp_42.pdf"></iframe>
+    </div>
+    <div class="questions-panel">
+      <h1>French Writing</h1>
+
+      <div class="question-block">
+        <h2>Question 1 (5 points)</h2>
+        <p class="short-answer-group">
+          <label for="q1-blank1">Blank 1</label>
+          <textarea id="q1-blank1" class="answer-input" placeholder="Your answer..."></textarea>
+          <label for="q1-blank2">Blank 2</label>
+          <textarea id="q1-blank2" class="answer-input" placeholder="Your answer..."></textarea>
+          <label for="q1-blank3">Blank 3</label>
+          <textarea id="q1-blank3" class="answer-input" placeholder="Your answer..."></textarea>
+          <label for="q1-blank4">Blank 4</label>
+          <textarea id="q1-blank4" class="answer-input" placeholder="Your answer..."></textarea>
+          <label for="q1-blank5">Blank 5</label>
+          <textarea id="q1-blank5" class="answer-input" placeholder="Your answer..."></textarea>
+        </p>
+      </div>
+
+      <div class="question-block">
+        <h2>Question 2 (12 points)</h2>
+        <label for="q2-answer">Answer (80–90 words)</label>
+        <textarea id="q2-answer" class="answer-input" style="height:150px;" placeholder="Type your Q2 answer here"></textarea>
+      </div>
+
+      <div class="question-block">
+        <h2>Question 3 (28 points)</h2>
+        <p>Choose an option:</p>
+        <select id="q3-option" class="dropdown-select">
+          <option value="3a">3(a)</option>
+          <option value="3b">3(b)</option>
+        </select>
+        <label for="q3-answer">Answer (130–140 words)</label>
+        <textarea id="q3-answer" class="answer-input" style="height:180px;" placeholder="Type your Q3 answer here"></textarea>
+      </div>
+
+      <button class="check-button" onclick="sendToGemini()">Get Gemini Feedback</button>
+      <button class="check-button" onclick="downloadPDF()">Download PDF</button>
+
+      <div id="gemini-feedback"></div>
+      <div id="pdf-content" style="display:none;"></div>
+    </div>
+  </div>
+
+  <div class="gemini-badge">
+    Powered by
+    <img src="gemini.png" alt="Gemini">
+  </div>
+
+  <script>
+    async function sendToGemini() {
+      localStorage.setItem('q1blank1', document.getElementById('q1-blank1').value)
+      localStorage.setItem('q1blank2', document.getElementById('q1-blank2').value)
+      localStorage.setItem('q1blank3', document.getElementById('q1-blank3').value)
+      localStorage.setItem('q1blank4', document.getElementById('q1-blank4').value)
+      localStorage.setItem('q1blank5', document.getElementById('q1-blank5').value)
+      localStorage.setItem('q2answer', document.getElementById('q2-answer').value)
+      localStorage.setItem('q3option', document.getElementById('q3-option').value)
+      localStorage.setItem('q3answer', document.getElementById('q3-answer').value)
+
+      const q1b1 = localStorage.getItem('q1blank1')
+      const q1b2 = localStorage.getItem('q1blank2')
+      const q1b3 = localStorage.getItem('q1blank3')
+      const q1b4 = localStorage.getItem('q1blank4')
+      const q1b5 = localStorage.getItem('q1blank5')
+      const q2 = localStorage.getItem('q2answer')
+      const q3opt = localStorage.getItem('q3option')
+      const q3 = localStorage.getItem('q3answer')
+
+      const scheme = "Question 1 (5 marks)\nGap 1: Acceptable answers include any meeting place.\nGap 2: Acceptable clothing items.\nGap 3 & 4: Acceptable foods.\nGap 5: Acceptable drinks.\n\nQuestion 2 (12 marks): 80–90 words.\nLocation, description, activities, advantages, future plans.\n10–12: All tasks, clear meaning.\n...\n\nQuestion 3 (28 marks): 130–140 words.\n(a) Temps libre or (b) Ma région.\nTask Completion (10), Range (10), Accuracy (8)."
+
+      const prompt = `
+Please grade these French IGCSE answers according to the Mark Scheme below.
+Provide direct corrections, feedback, and a suggested mark out of 45 overall.
+Use double asterisks for bold text, single asterisks, hashtags (#), etc. 
+Highlight fractions in green if possible.
+
+== MARK SCHEME ==
+${scheme}
+
+== USER ANSWERS ==
+Q1:
+1) ${q1b1}
+2) ${q1b2}
+3) ${q1b3}
+4) ${q1b4}
+5) ${q1b5}
+
+Q2:
+${q2}
+
+Q3 (${q3opt}):
+${q3}
+
+Avoid criticizing the scheme itself.`
+
+      const outputArea = document.getElementById('gemini-feedback')
+      outputArea.textContent = "Evaluating..."
+
+      try {
+        const res = await fetch("https://codespaces-blank-seven-xi.vercel.app/api/gemini", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prompt })
+        })
+        const json = await res.json()
+        if (json?.data?.candidates?.[0]?.content?.parts?.[0]?.text) {
+          let responseText = json.data.candidates[0].content.parts[0].text
+
+          responseText = responseText
+            .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")      // double asterisks
+            .replace(/(?<!\*)\*(?!\*)(.*?)\*(?!\*)/g, "<em>$1</em>")  // single asterisk
+            .replace(/^## (.*)$/gm, "<h2>$1</h2>")                // "## Title"
+            .replace(/^# (.*)$/gm, "<h1>$1</h1>")                 // "# Title"
+            .replace(/\n/g, "<br>")
+            .replace(/(\d+(?:\.\d+)?\/\d+)/g, '<span class="score-highlight">$1</span>')
+
+          outputArea.innerHTML = responseText
+
+          document.getElementById('pdf-content').innerHTML = `
+            <h1>0520/42/O/N/24 - SolvrAI</h1>
+            <h3>User Answers</h3>
+            <p>Q1 Blanks: ${q1b1}, ${q1b2}, ${q1b3}, ${q1b4}, ${q1b5}</p>
+            <p>Q2: ${q2}</p>
+            <p>Q3 (${q3opt}): ${q3}</p>
+            <h3>AI Feedback</h3>
+            <div>${responseText}</div>
+            <div>All of this is AI generated, and this tool is in beta. Please send an email to arnav@solvr.in for any issues/bugs. </div>
+
+          `
+        } else {
+          outputArea.textContent = "No feedback received."
+        }
+      } catch(e) {
+        outputArea.textContent = "Error: " + e
+      }
+    }
+
+    function downloadPDF() {
+      const element = document.getElementById('pdf-content')
+      element.style.display = 'block'
+      const opt = {
+        filename: 'Solvr-November-2024-P4.pdf',
+        margin: 0.5,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+      }
+      html2pdf().set(opt).from(element).save().then(() => {
+        element.style.display = 'none'
+      })
+    }
+  </script>
+</body>
+</html>
