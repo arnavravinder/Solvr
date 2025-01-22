@@ -1,3 +1,5 @@
+// EXACT CODE BEGINS
+
 const urlParams = new URLSearchParams(window.location.search);
 const reviewIndex = urlParams.get('review');
 
@@ -23,7 +25,13 @@ const answeredCountEl = document.getElementById('answeredCount');
 const unansweredCountEl = document.getElementById('unansweredCount');
 const flaggedCountEl = document.getElementById('flaggedCount');
 
+// NEW RATING ELEMENTS:
+const ratePaperOverlay = document.getElementById('ratePaperOverlay');
+const confirmRateBtn = document.getElementById('confirmRateBtn');
+
 let storedResults = JSON.parse(localStorage.getItem('solvrResults'))||[];
+
+// EXACT CODE CONTINUES
 
 if (backHomeBtn) {
   backHomeBtn.addEventListener('click', ()=> {
@@ -230,10 +238,8 @@ function createQuestionBlock(i){
   });
   block.appendChild(flagBtn);
 
-  // Options
   let options=['A','B','C','D'];
   if(subject==='French'){
-    // adapt QNum-based options french only
     if(qNum>=1&&qNum<=14) options=['A','B','C','D'];
     else if(qNum>=15&&qNum<=19) options=['A','B','C','D','E','F'];
     else if(qNum>=20&&qNum<=28) options=['A','B','C'];
@@ -324,7 +330,6 @@ function showResults(score,isReview=false,attemptObj=null,questionSubset=null){
 // submit
 function submitAnswers(){
   if(subject==='French' && !reviewIndex){
-    // ensure no duplicates in Q15–19
     if(!checkQ15to19Duplicates()){
       duplicatesOverlay.style.display='flex';
       return;
@@ -334,8 +339,6 @@ function submitAnswers(){
   for(let i=0;i<totalQuestions;i++){
     score+=calculateMarks(i,userAnswers[i],correctAnswers[i]);
   }
-  showResults(score,false,null,null);
-
   const totalMax=(subject==='French'?40:totalQuestions);
   const attempt={
     subject, paperCode,
@@ -349,11 +352,14 @@ function submitAnswers(){
   attempt.attemptIndex=storedResults.length;
   storedResults.push(attempt);
   localStorage.setItem('solvrResults',JSON.stringify(storedResults));
+
+  // SHOW RATING POPUP BEFORE DISPLAYING SCOREBOARD
+  window.finalScoreForPaper = score;
+  ratePaperOverlay.style.display='flex';
 }
 
-// init
+// EXACT CODE - REVIEW OR NORMAL MODE
 if(reviewIndex!==null){
-  // REVIEW MODE
   let attempt=storedResults[reviewIndex];
   subject=attempt.subject;
   paperCode=attempt.paperCode;
@@ -364,7 +370,6 @@ if(reviewIndex!==null){
   else totalQuestions=30;
 
   userAnswers=new Array(totalQuestions).fill(null);
-
   pdfFrame.src=`/${paperCode.substring(0,4)}/${paperCode}.pdf`;
   panelTitle.textContent='Wrong Questions';
   submitBtn.style.display='none';
@@ -388,8 +393,7 @@ if(reviewIndex!==null){
     showResults(reviewScore,true,attempt,wrongIndices);
   });
 
-} else {
-  // NORMAL MODE
+}else{
   subject=localStorage.getItem('subject')||'Economics';
   paperCode=localStorage.getItem('paperCode');
   msCode=localStorage.getItem('msCode');
@@ -400,10 +404,8 @@ if(reviewIndex!==null){
 
   userAnswers=new Array(totalQuestions).fill(null);
 
-  // If subject is French => create audio for listening
   if(subject==='French'){
-    // e.g. 0520_m24_qp_12 => 0520_m24_sf_12
-    const audioCode = paperCode.replace('_qp_', '_sf_');
+    const audioCode=paperCode.replace('_qp_','_sf_');
     const pdfViewer=document.querySelector('.pdf-viewer');
     const parent=pdfViewer.parentNode;
     const audioContainer=document.createElement('div');
@@ -412,21 +414,18 @@ if(reviewIndex!==null){
 
     audioElement=document.createElement('audio');
     audioElement.src=`../${paperCode.substring(0,4)}/${audioCode}.mp3`;
-    audioElement.autoplay=true; // or set .controls=true
+    audioElement.autoplay=true;
     audioContainer.appendChild(audioElement);
     parent.insertBefore(audioContainer,pdfViewer);
 
     audioElement.addEventListener('loadedmetadata',()=>{
       let duration=audioElement.duration;
-      if(isNaN(duration))duration=2700; // fallback ~45 min
+      if(isNaN(duration)) duration=2700;
       totalTime=Math.floor(duration)+10;
-      console.log('French listening loaded => totalTime = ', totalTime);
     });
 
-    // Load the PDF
     pdfFrame.src=`/${paperCode.substring(0,4)}/${paperCode}.pdf`;
 
-    // fetch answers
     fetch(`/${subject}/answers.json`)
     .then(r=>r.json())
     .then(data=>{
@@ -436,18 +435,11 @@ if(reviewIndex!==null){
         questionsContainer.appendChild(createQuestionBlock(i));
       }
       submitBtn.addEventListener('click',submitAnswers);
-
-      // once audio is loaded, we start timer
-      audioElement.addEventListener('loadedmetadata',()=>{
-        // if not paused etc.
-        startTimer();
-      });
+      audioElement.addEventListener('loadedmetadata',()=>{ startTimer(); });
     });
 
-  } else {
-    // Non-French => normal
+  }else{
     pdfFrame.src=`/${paperCode.substring(0,4)}/${paperCode}.pdf`;
-
     fetch(`/${subject}/answers.json`)
     .then(r=>r.json())
     .then(data=>{
@@ -461,3 +453,21 @@ if(reviewIndex!==null){
     });
   }
 }
+
+// rating logic
+confirmRateBtn.addEventListener('click',()=>{
+  let rating=null;
+  ratePaperOverlay.querySelectorAll('input[name="paperDifficulty"]').forEach(r=>{
+    if(r.checked) rating=r.value;
+  });
+  if(!rating){alert("Pick a difficulty");return;}
+  let st=JSON.parse(localStorage.getItem("solvrResults"))||[];
+  if(st.length>0){
+    let last=st[st.length-1];
+    last.paperRating=rating;
+    localStorage.setItem("solvrResults",JSON.stringify(st));
+  }
+  ratePaperOverlay.style.display='none';
+  showResults(window.finalScoreForPaper||0,false,null,null);
+});
+

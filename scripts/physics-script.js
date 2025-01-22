@@ -32,22 +32,6 @@ function resetSelectionsAfterYear(){
     variantGroup.querySelectorAll('.option-btn').forEach(b=>b.classList.remove('selected','disabled'));
 }
 
-function applyYearConstraints(){
-    // Same logic as Chemistry:
-    // If year=2024, disable Oct/Nov (w)
-    if(selectedYear==='2024'){
-        monthGroup.querySelectorAll('.option-btn').forEach(btn=>{
-            if(btn.dataset.month==='w') {
-                btn.disabled=true;
-                btn.classList.add('disabled');
-                if(selectedMonth==='w'){
-                    selectedMonth=null;
-                    btn.classList.remove('selected');
-                }
-            }
-        });
-    }
-}
 
 monthGroup.querySelectorAll('.option-btn').forEach(btn=>{
     btn.addEventListener('click',()=>{

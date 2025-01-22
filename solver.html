@@ -5,35 +5,74 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Solvr - Solver</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-
-  <!-- Global styles in same directory as HTML -->
   <link rel="stylesheet" href="global-styles.css">
-  <!-- Main solver page styles in the /styles folder -->
   <link rel="stylesheet" href="styles/solver-style.css">
-
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link 
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap"
     rel="stylesheet"
   >
-  <script type="module">
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js';
-    import { getAnalytics } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-analytics.js';
-    const firebaseConfig = {
-      apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-      authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-      projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-      storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-      messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-      appId: import.meta.env.VITE_FIREBASE_APP_ID,
-      measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
-    };
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-  </script>
-  <!-- 100% privacy-first analytics -->
-<script data-collect-dnt="true" async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
-<noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif?collect-dnt=true" alt="" referrerpolicy="no-referrer-when-downgrade"/></noscript>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <style>
+    .popup-overlay {
+      position:fixed;
+      top:0;left:0;
+      width:100%;height:100%;
+      background:rgba(0,0,0,0.6);
+      display:none;
+      justify-content:center;
+      align-items:center;
+      z-index:999;
+    }
+    .popup-content {
+      background:#31363F;
+      padding:1.5rem;
+      border-radius:8px;
+      text-align:center;
+      color:#EEEEEE;
+      max-width:350px;
+      width:100%;
+    }
+    .rating-title {
+      font-size:1.2rem;
+      margin-bottom:1rem;
+    }
+    .rating-buttons {
+      display:flex;
+      justify-content:space-between;
+      gap:0.5rem;
+    }
+    .rating-btn {
+      flex:1;
+      padding:0.75rem;
+      border:none;
+      border-radius:6px;
+      color:#222;
+      cursor:pointer;
+      font-size:1rem;
+      font-weight:600;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      transition:0.3s;
+    }
+    .rating-btn i {
+      margin-right:0.5rem;
+    }
+    .rating-btn-easy {
+      background:#9cffb9;
+    }
+    .rating-btn-medium {
+      background:#fffa8a;
+    }
+    .rating-btn-hard {
+      background:#ffac93;
+    }
+    .rating-btn:hover {
+      filter:brightness(0.95);
+    }
+  </style>
 </head>
 <body>
   <div class="loader-overlay" id="loaderOverlay">
@@ -47,9 +86,7 @@
     <a href="statistics.html">Statistics</a>
     <div class="timer-container" id="timerContainer">
       <span>Time left: <span id="timer">00:00</span></span>
-      <!-- Pause/resume icons swapped in JS -->
       <button id="pauseBtn" class="icon-btn" style="margin-left:0.5rem;"></button>
-      <!-- Styled +15 Min button -->
       <button id="add-time-btn" class="mini-btn" style="margin-left:0.5rem;">+15 Min</button>
     </div>
   </nav>
@@ -60,7 +97,6 @@
     </div>
     <div class="question-panel">
       <h2 id="panelTitle">Questions</h2>
-
       <div class="counters">
         <div class="counter-box">
           <div class="counter-label">Answered</div>
@@ -72,17 +108,13 @@
         </div>
         <div class="counter-box">
           <div class="counter-label">
-            <img src="assets/flag.png" alt="Flag" class="flag-icon" />
+            <img src="assets/flag.png" alt="Flag" class="flag-icon"/>
           </div>
           <div class="counter-value" id="flaggedCount">0</div>
         </div>
       </div>
-
-      <!-- Grid visible by default => up icon -->
       <button id="toggleMenuBtn" class="toggle-menu-btn up-icon"></button>
-
       <div class="question-grid" id="questionGrid"></div>
-
       <div id="questions-container"></div>
       <button id="submitAnswersBtn" class="submit-btn">Submit</button>
       <button id="checkReviewBtn" class="submit-btn" style="display:none;">Check</button>
@@ -123,18 +155,36 @@
     <button id="backHomeBtn" class="submit-btn" style="margin-top:1rem;">Back to Home</button>
   </div>
 
+  <!-- NEW Rate Paper Popup -->
+  <div class="popup-overlay" id="ratePaperOverlay" style="display:none;">
+    <div class="popup-content">
+      <div class="rating-title">How was the paper?</div>
+      <div class="rating-buttons">
+        <button class="rating-btn rating-btn-easy" data-value="Easy">
+          <i class="fas fa-smile"></i> Easy
+        </button>
+        <button class="rating-btn rating-btn-medium" data-value="Medium">
+          <i class="fas fa-meh"></i> Medium
+        </button>
+        <button class="rating-btn rating-btn-hard" data-value="Hard">
+          <i class="fas fa-frown"></i> Hard
+        </button>
+      </div>
+    </div>
+  </div>
+
   <div class="popup-overlay" id="timeUpOverlay">
     <div class="popup-content">
       <h3>Time's Up!</h3>
       <p>Do you want to add 15 minutes?</p>
-      <button class="close-popup" id="addTimeNowBtn">Add 15 Minutes</button>
+      <button class="close-popup" id="addTimeNowBtn">+15 Min</button>
     </div>
   </div>
+
   <div class="popup-overlay" id="reviewResultOverlay" style="display:none;">
     <div class="popup-content" id="reviewResultContent"></div>
   </div>
 
-  <!-- Duplicates popup for Q15–19 in French -->
   <div class="popup-overlay" id="duplicatesOverlay" style="display:none;">
     <div class="popup-content">
       <h3>Duplicates Found in Q15–19</h3>
@@ -144,5 +194,25 @@
   </div>
 
   <script src="scripts/solver-script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded',()=>{
+      const ratePaperOverlay=document.getElementById('ratePaperOverlay')
+      const ratingButtons=ratePaperOverlay.querySelectorAll('.rating-btn')
+
+      ratingButtons.forEach(btn=>{
+        btn.addEventListener('click',()=>{
+          let rating=btn.dataset.value
+          let st=JSON.parse(localStorage.getItem("solvrResults"))||[]
+          if(st.length>0){
+            let last=st[st.length-1]
+            last.paperRating=rating
+            localStorage.setItem("solvrResults",JSON.stringify(st))
+          }
+          ratePaperOverlay.style.display='none'
+          showResults(window.finalScoreForPaper||0,false,null,null)
+        })
+      })
+    })
+  </script>
 </body>
 </html>

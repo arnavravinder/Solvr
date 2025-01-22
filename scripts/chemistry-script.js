@@ -32,29 +32,6 @@ function resetSelectionsAfterYear(){
     variantGroup.querySelectorAll('.option-btn').forEach(b=>b.classList.remove('selected','disabled'));
 }
 
-function applyYearConstraints(){
-    // For Chemistry: If year = 2024, disable October/November (w)
-    if(selectedYear==='2024'){
-        monthGroup.querySelectorAll('.option-btn').forEach(btn=>{
-            if(btn.dataset.month==='w') {
-                btn.disabled=true;
-                btn.classList.add('disabled');
-                if(selectedMonth==='w'){
-                    selectedMonth=null;
-                    btn.classList.remove('selected');
-                }
-            }
-        });
-    } else {
-        // If other years, no extra constraint. Just ensure they're enabled if previously disabled.
-        monthGroup.querySelectorAll('.option-btn').forEach(btn=>{
-            if(!btn.classList.contains('disabled') && btn.disabled) {
-                btn.disabled=false;
-            }
-        });
-    }
-}
-
 monthGroup.querySelectorAll('.option-btn').forEach(btn=>{
     btn.addEventListener('click',()=>{
         if(btn.classList.contains('disabled'))return;

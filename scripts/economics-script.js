@@ -42,10 +42,6 @@ function enableMonths() {
     });
     if(selectedYear==='2024'){
         monthGroup.querySelectorAll('.option-btn').forEach(b=>{
-            if(b.dataset.name==='Oct/Nov'){
-                b.disabled=true;
-                b.classList.add('disabled');
-            }
         });
     }
     variantGroup.querySelectorAll('.option-btn').forEach(b=>{
