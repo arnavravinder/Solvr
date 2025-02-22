@@ -83,7 +83,7 @@ startBtn.addEventListener('click',()=>{
     const msCode=`${subjectCode}_${selectedMonth}${yearStr}_ms_${paperEnding}`;
     localStorage.setItem('paperCode',qpCode);
     localStorage.setItem('msCode',msCode);
-    localStorage.setItem('subject','French');
+    localStorage.setItem('subject','Spanish');
     window.location.href='solver.html';
 });
 
