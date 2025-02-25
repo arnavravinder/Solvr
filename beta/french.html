@@ -300,7 +300,7 @@ Avoid criticizing the scheme itself.`
       outputArea.textContent = "Evaluating..."
 
       try {
-        const res = await fetch("https://codespaces-blank-seven-xi.vercel.app/api/gemini", {
+        const res = await fetch("https://solvr-api.vercel.app/api/gemini", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ prompt })
