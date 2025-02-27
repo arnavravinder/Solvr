@@ -1,4 +1,3 @@
-/* Base Styles - Dark Mode */
 :root {
     --primary-color: #6366F1;
     --primary-hover: #4F46E5;
@@ -22,7 +21,6 @@
     --radius-lg: 0.5rem;
     --transition-normal: all 0.3s ease;
     
-    /* Option Colors */
     --option-a-color: #3B82F6;
     --option-b-color: #10B981;
     --option-c-color: #F59E0B;
@@ -44,7 +42,6 @@ body {
     overflow-x: hidden;
 }
 
-/* Container */
 .container {
     max-width: 1800px;
     margin: 0 auto;
@@ -54,7 +51,6 @@ body {
     flex-direction: column;
 }
 
-/* Header Styles */
 header {
     display: flex;
     justify-content: space-between;
@@ -131,7 +127,6 @@ header {
     background-color: var(--primary-hover);
 }
 
-/* Main Content */
 main {
     flex: 1;
     overflow: hidden;
@@ -145,7 +140,6 @@ main {
     overflow: hidden;
 }
 
-/* PDF Container */
 .pdf-container {
     background-color: var(--bg-primary);
     border-radius: var(--radius-lg);
@@ -157,133 +151,6 @@ main {
     overflow: hidden;
 }
 
-#pdf-controls {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid var(--border-color);
-    margin-bottom: 1rem;
-}
-
-.control-button {
-    background-color: var(--bg-tertiary);
-    border: none;
-    border-radius: var(--radius-md);
-    padding: 0.5rem;
-    cursor: pointer;
-    transition: var(--transition-normal);
-    color: var(--text-primary);
-}
-
-.control-button:hover {
-    background-color: var(--border-color);
-}
-
-#page-info {
-    font-size: 0.875rem;
-    color: var(--text-secondary);
-}
-
-/* PDF Viewer Styles - Add to custom-exam.css and custom-results.css */
-
-/* PDF Container */
-.pdf-container {
-    background-color: var(--bg-primary);
-    border-radius: var(--radius-lg);
-    padding: 1rem;
-    box-shadow: var(--shadow-md);
-    display: flex;
-    flex-direction: column;
-    height: calc(100vh - 150px);
-    overflow: hidden;
-}
-
-/* PDF Viewer */
-.pdf-viewer {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-color: #444;
-    border-radius: var(--radius-md);
-    overflow: auto;
-    position: relative;
-}
-
-#pdf-render {
-    background-color: white;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    max-height: 100%;
-    max-width: 100%;
-    object-fit: contain;
-}
-
-/* Zoom Controls */
-.zoom-controls {
-    position: absolute;
-    bottom: 1rem;
-    right: 1rem;
-    display: flex;
-    gap: 0.5rem;
-    background-color: rgba(0, 0, 0, 0.5);
-    padding: 0.5rem;
-    border-radius: var(--radius-md);
-    z-index: 10;
-}
-
-.zoom-button {
-    background-color: var(--bg-tertiary);
-    border: none;
-    border-radius: var(--radius-sm);
-    width: 30px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: var(--text-primary);
-}
-
-.zoom-button:hover {
-    background-color: var(--primary-color);
-}
-
-#zoom-level {
-    background-color: var(--bg-tertiary);
-    border-radius: var(--radius-sm);
-    padding: 0.25rem 0.5rem;
-    color: var(--text-primary);
-    min-width: 50px;
-    text-align: center;
-}
-
-/* Page Loading Indicator */
-.page-loading {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: rgba(0, 0, 0, 0.7);
-    padding: 1rem;
-    border-radius: var(--radius-md);
-}
-
-.loader-small {
-    border: 3px solid var(--border-color);
-    border-top: 3px solid var(--primary-color);
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}/* Results Section */
 .results-section {
     background-color: var(--bg-primary);
     border-radius: var(--radius-lg);
@@ -424,7 +291,6 @@ main {
     font-style: italic;
 }
 
-/* Action Buttons */
 .action-buttons {
     display: flex;
     justify-content: center;
@@ -449,7 +315,6 @@ main {
     border-color: var(--primary-color);
 }
 
-/* Modal */
 .modal {
     position: fixed;
     top: 0;
@@ -532,7 +397,6 @@ tr:hover {
     text-decoration: underline;
 }
 
-/* Loading Overlay */
 #loading-overlay {
     position: fixed;
     top: 0;
@@ -566,7 +430,6 @@ tr:hover {
     display: none !important;
 }
 
-/* Responsive Adjustments */
 @media (max-width: 1200px) {
     .results-content {
         grid-template-columns: 1fr;
