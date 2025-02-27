@@ -89,13 +89,23 @@ document.addEventListener('DOMContentLoaded', function() {
         pageRendering = true;
         
         pdfDoc.getPage(num).then(function(page) {
-            const viewport = page.getViewport({ scale });
-            canvas.height = viewport.height;
-            canvas.width = viewport.width;
+            // Set scale for A4 size display
+            const viewport = page.getViewport({ scale: 1.0 });
+            
+            // Calculate scale to fit the canvas width while maintaining aspect ratio
+            const parent = canvas.parentElement;
+            const desiredWidth = parent.clientWidth - 40; // Adjust for padding
+            scale = desiredWidth / viewport.width;
+            
+            // Get viewport with new scale
+            const scaledViewport = page.getViewport({ scale });
+            
+            canvas.height = scaledViewport.height;
+            canvas.width = scaledViewport.width;
             
             const renderContext = {
                 canvasContext: ctx,
-                viewport: viewport
+                viewport: scaledViewport
             };
             
             const renderTask = page.render(renderContext);

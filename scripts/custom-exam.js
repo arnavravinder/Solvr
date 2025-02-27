@@ -104,13 +104,23 @@ document.addEventListener('DOMContentLoaded', function() {
         pageRendering = true;
         
         pdfDoc.getPage(num).then(function(page) {
-            const viewport = page.getViewport({ scale });
-            canvas.height = viewport.height;
-            canvas.width = viewport.width;
+            // Set scale for A4 size display
+            const viewport = page.getViewport({ scale: 1.0 });
+            
+            // Calculate scale to fit the canvas width while maintaining aspect ratio
+            const parent = canvas.parentElement;
+            const desiredWidth = parent.clientWidth - 40; // Adjust for padding
+            scale = desiredWidth / viewport.width;
+            
+            // Get viewport with new scale
+            const scaledViewport = page.getViewport({ scale });
+            
+            canvas.height = scaledViewport.height;
+            canvas.width = scaledViewport.width;
             
             const renderContext = {
                 canvasContext: ctx,
-                viewport: viewport
+                viewport: scaledViewport
             };
             
             const renderTask = page.render(renderContext);
@@ -156,20 +166,27 @@ document.addEventListener('DOMContentLoaded', function() {
             // Add question number
             const numberDiv = document.createElement('div');
             numberDiv.className = 'question-number';
-            numberDiv.textContent = questionNumber;
+            numberDiv.textContent = `Question ${questionNumber}`;
             questionItem.appendChild(numberDiv);
             
             // Create options container
             const optionsContainer = document.createElement('div');
             optionsContainer.className = 'answer-options';
             
-            // Create A, B, C, D options
-            ['A', 'B', 'C', 'D'].forEach(option => {
+            // Create A, B, C, D options with different colors
+            const options = [
+                { value: 'A', class: 'answer-option-a' },
+                { value: 'B', class: 'answer-option-b' },
+                { value: 'C', class: 'answer-option-c' },
+                { value: 'D', class: 'answer-option-d' }
+            ];
+            
+            options.forEach(option => {
                 const optionButton = document.createElement('div');
-                optionButton.className = 'answer-option';
-                optionButton.textContent = option;
+                optionButton.className = `answer-option ${option.class}`;
+                optionButton.textContent = option.value;
                 optionButton.dataset.question = questionNumber;
-                optionButton.dataset.answer = option;
+                optionButton.dataset.answer = option.value;
                 
                 // Add click handler
                 optionButton.addEventListener('click', handleAnswerSelect);
