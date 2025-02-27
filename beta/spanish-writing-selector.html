@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Solvr - Spanish Writing Selector</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles/spanish-writing-selector.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar">
+    <img src="assets/logo.svg" class="logo-img" alt="Logo">
+    <a href="index.html" class="logo-text">Solvr.</a>
+  </nav>
+  <main class="container">
+    <h1>Cambridge IGCSE Spanish Writing</h1>
+    <p>Select the parameters for your paper:</p>
+    <section class="section">
+      <h2>Year</h2>
+      <div class="button-group" id="year-group">
+        <button class="option-btn" data-year="2022">2022</button>
+        <button class="option-btn" data-year="2023">2023</button>
+        <button class="option-btn" data-year="2024">2024</button>
+        <button class="option-btn" data-year="2025">2025</button>
+        <button class="option-btn" data-year="2026">2026</button>
+        <button class="option-btn" data-year="2027">2027</button>
+      </div>
+    </section>
+    <section class="section">
+      <h2>Month</h2>
+      <div class="button-group" id="month-group">
+        <button class="option-btn" data-month="m" data-name="Feb/March">Feb/March</button>
+        <button class="option-btn" data-month="s" data-name="May/June">May/June</button>
+        <button class="option-btn" data-month="w" data-name="Oct/Nov">Oct/Nov</button>
+      </div>
+    </section>
+    <section class="section">
+      <h2>Variant</h2>
+      <div class="button-group" id="variant-group">
+        <button class="option-btn" data-variant="1">1</button>
+        <button class="option-btn" data-variant="2">2</button>
+        <button class="option-btn" data-variant="3">3</button>
+      </div>
+    </section>
+    <button id="start-btn" class="submit-btn">Start</button>
+  </main>
+  <div class="popup-overlay" id="incompletePopup">
+    <div class="popup-content">
+      <h3>Incomplete Selection</h3>
+      <p>Please complete year, month, and variant selection before starting.</p>
+      <button class="close-popup" id="closeIncompletePopup">OK</button>
+    </div>
+  </div>
+  <script src="scripts/spanish-writing-selector.js"></script>
+</body>
+</html>

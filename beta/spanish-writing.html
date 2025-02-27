@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Solvr Beta - Spanish Writing (Paper 4)</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="global-styles.css">
+  <link rel="stylesheet" href="styles/spanish-writing.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar">
+    <img src="assets/logo.svg" class="logo-img" alt="Logo">
+    <a href="index.html" class="logo-text">Solvr.</a>
+  </nav>
+  <main class="container two-column">
+    <!-- Left Column: PDF Viewer -->
+    <section class="pdf-section">
+      <h2>Question Paper</h2>
+      <iframe id="pdfFrame" src="beta/0530_m24_qp_42.pdf" frameborder="0"></iframe>
+    </section>
+    <!-- Right Column: Writing Form -->
+    <section class="writing-section">
+      <h1>Spanish Writing - Paper 4</h1>
+      <p>Duration: 1 hour | 3 Questions</p>
+      <form id="spanishWritingForm">
+        <fieldset>
+          <legend>Question 1 (Short Answer)</legend>
+          <p>Provide your answer for Question 1 (5 short responses):</p>
+          <div class="q1-options">
+            <input type="text" name="q1_option1" placeholder="Option 1" required>
+            <input type="text" name="q1_option2" placeholder="Option 2" required>
+            <input type="text" name="q1_option3" placeholder="Option 3" required>
+            <input type="text" name="q1_option4" placeholder="Option 4" required>
+            <input type="text" name="q1_option5" placeholder="Option 5" required>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Question 2 (Essay)</legend>
+          <p>Write an essay of about 80-90 words.</p>
+          <textarea name="q2_essay" rows="8" placeholder="Your essay here..." required></textarea>
+        </fieldset>
+        <fieldset>
+          <legend>Question 3 (Choice Essay)</legend>
+          <p>Choose a part and write your answer.</p>
+          <label for="q3_choice">Select Part:</label>
+          <select name="q3_choice" id="q3_choice" required>
+            <option value="">--Select--</option>
+            <option value="A">Part A</option>
+            <option value="B">Part B</option>
+          </select>
+          <p>Then write an essay of about 130-140 words.</p>
+          <textarea name="q3_essay" rows="10" placeholder="Your essay here..." required></textarea>
+        </fieldset>
+        <button type="submit" class="submit-btn">Submit Answers</button>
+      </form>
+      <div id="resultContainer" style="display:none;">
+        <h2>AI Evaluation</h2>
+        <div id="aiResponse"></div>
+      </div>
+    </section>
+  </main>
+  <footer class="footer">
+    <p>Built with <span class="heart">❤️</span> by <a href="https://github.com/arnavravinder" target="_blank" rel="noopener" style="color:#76ABAE;">Arnav</a></p>
+  </footer>
+  <script src="scripts/spanish-writing.js"></script>
+</body>
+</html>

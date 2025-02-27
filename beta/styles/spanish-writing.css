@@ -1,0 +1,125 @@
+body {
+    background: #222831;
+    color: #EEEEEE;
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  .navbar {
+    background: #31363F;
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+  }
+  .logo-img {
+    width: 30px;
+    height: 30px;
+    margin-right: 0.5rem;
+  }
+  .logo-text {
+    color: #76ABAE;
+    font-size: 1.5rem;
+    text-decoration: none;
+    margin-right: auto;
+  }
+  .container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+  .two-column {
+    display: flex;
+    gap: 2rem;
+  }
+  .pdf-section {
+    flex: 1;
+  }
+  .pdf-section h2 {
+    text-align: center;
+    color: #76ABAE;
+    margin-bottom: 1rem;
+  }
+  .pdf-section iframe {
+    width: 100%;
+    height: 600px;
+    border: 1px solid #444;
+    border-radius: 4px;
+  }
+  .writing-section {
+    flex: 1;
+    background: #31363F;
+    padding: 1.5rem;
+    border-radius: 8px;
+  }
+  .writing-section h1 {
+    text-align: center;
+    color: #76ABAE;
+  }
+  form fieldset {
+    border: 1px solid #444;
+    border-radius: 4px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+  form legend {
+    padding: 0 0.5rem;
+    font-weight: 600;
+    color: #76ABAE;
+  }
+  .q1-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .q1-options input {
+    flex: 1;
+    min-width: 150px;
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: none;
+  }
+  textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid #444;
+    background: #222831;
+    color: #EEEEEE;
+    resize: vertical;
+  }
+  .submit-btn {
+    background: #76ABAE;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    color: #222831;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+    margin-top: 1rem;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .submit-btn:hover {
+    background: #86C0C3;
+  }
+  #resultContainer {
+    margin-top: 1.5rem;
+    background: #31363F;
+    padding: 1rem;
+    border-radius: 4px;
+  }
+  footer.footer {
+    text-align: center;
+    padding: 1rem;
+    background: #222831;
+    color: #EEEEEE;
+    font-size: 0.9rem;
+    margin-top: 2rem;
+  }
+  footer.footer a {
+    color: #76ABAE;
+    text-decoration: none;
+  }
+  
