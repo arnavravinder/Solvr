@@ -82,48 +82,84 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    /**
-     * Render a specific page of the PDF
-     */
-    function renderPage(num) {
-        pageRendering = true;
-        
-        pdfDoc.getPage(num).then(function(page) {
-            // Set scale for A4 size display
-            const viewport = page.getViewport({ scale: 1.0 });
-            
-            // Calculate scale to fit the canvas width while maintaining aspect ratio
-            const parent = canvas.parentElement;
-            const desiredWidth = parent.clientWidth - 40; // Adjust for padding
-            scale = desiredWidth / viewport.width;
-            
-            // Get viewport with new scale
-            const scaledViewport = page.getViewport({ scale });
-            
-            canvas.height = scaledViewport.height;
-            canvas.width = scaledViewport.width;
-            
-            const renderContext = {
-                canvasContext: ctx,
-                viewport: scaledViewport
-            };
-            
-            const renderTask = page.render(renderContext);
-            
-            renderTask.promise.then(function() {
-                pageRendering = false;
-                
-                if (pageNumPending !== null) {
-                    renderPage(pageNumPending);
-                    pageNumPending = null;
-                }
-            });
-        });
-        
-        document.getElementById('page-info').textContent = `Page ${num} of ${pdfDoc.numPages}`;
-    }
+/**
+ * Render a specific page of the PDF with proper A4 aspect ratio
+ */
+function renderPage(num) {
+    pageRendering = true;
     
-    /**
+    pdfDoc.getPage(num).then(function(page) {
+        // A4 aspect ratio is 1:1.414 (width:height)
+        const A4_RATIO = 1 / 1.414;
+        
+        // Get original viewport
+        const originalViewport = page.getViewport({ scale: 1.0 });
+        
+        // Get container dimensions
+        const parent = canvas.parentElement;
+        const containerWidth = parent.clientWidth - 40; // Subtract padding
+        const containerHeight = parent.clientHeight - 40;
+        
+        // Determine optimal scale based on container width while preserving A4 ratio
+        let scaledWidth = containerWidth;
+        let scaledHeight = containerWidth / A4_RATIO;
+        
+        // If the height exceeds container, scale based on height instead
+        if (scaledHeight > containerHeight) {
+            scaledHeight = containerHeight;
+            scaledWidth = containerHeight * A4_RATIO;
+        }
+        
+        // Calculate scale that maintains page's natural aspect ratio
+        const widthScale = scaledWidth / originalViewport.width;
+        const heightScale = scaledHeight / originalViewport.height;
+        const scale = Math.min(widthScale, heightScale);
+        
+        // Create new viewport with calculated scale
+        const viewport = page.getViewport({ scale });
+        
+        // Set canvas dimensions
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+        
+        // Center the canvas in its container if smaller than container
+        if (canvas.width < containerWidth) {
+            canvas.style.marginLeft = `${(containerWidth - canvas.width) / 2}px`;
+        } else {
+            canvas.style.marginLeft = '0';
+        }
+        
+        // Render the PDF page
+        const renderContext = {
+            canvasContext: ctx,
+            viewport: viewport,
+            intent: 'display'
+        };
+        
+        const renderTask = page.render(renderContext);
+        
+        renderTask.promise.then(function() {
+            pageRendering = false;
+            
+            if (pageNumPending !== null) {
+                renderPage(pageNumPending);
+                pageNumPending = null;
+            }
+        });
+    });
+    
+    document.getElementById('page-info').textContent = `Page ${num} of ${pdfDoc.numPages}`;
+}
+
+/**
+ * Add window resize handler to adjust PDF display when window size changes
+ */
+window.addEventListener('resize', function() {
+    if (pdfDoc) {
+        // Re-render current page on resize to maintain proper aspect ratio
+        queueRenderPage(pageNum);
+    }
+});    /**
      * Queue page rendering if another page is already rendering
      */
     function queueRenderPage(num) {

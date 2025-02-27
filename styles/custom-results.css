@@ -189,10 +189,11 @@ main {
 #pdf-render {
     flex: 1;
     overflow: auto;
-    background-color: #fff; /* Keep PDF background white for readability */
+    background-color: #fff;
     border-radius: var(--radius-md);
+    margin: 0 auto; /* Center the canvas */
+    display: block; /* Ensure proper display */
 }
-
 /* Results Section */
 .results-section {
     background-color: var(--bg-primary);
