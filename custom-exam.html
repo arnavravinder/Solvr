@@ -35,24 +35,31 @@
         </header>
 
         <main>
-            <div class="exam-content">
-                <div class="pdf-container">
-                    <div id="pdf-controls">
-                        <button id="prev-page" class="control-button">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="15 18 9 12 15 6"></polyline>
-                            </svg>
-                        </button>
-                        <span id="page-info">Page 1 of 1</span>
-                        <button id="next-page" class="control-button">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="9 18 15 12 9 6"></polyline>
-                            </svg>
-                        </button>
-                    </div>
-                    <canvas id="pdf-render"></canvas>
-                </div>
-                
+<!-- Updated PDF Container HTML Structure -->
+<div class="pdf-container">
+    <div id="pdf-controls">
+        <button id="prev-page" class="control-button" title="Previous Page">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+        </button>
+        <span id="page-info">Page 1 of 1</span>
+        <button id="next-page" class="control-button" title="Next Page">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        </button>
+    </div>
+    <div class="pdf-viewer">
+        <canvas id="pdf-render"></canvas>
+        <div class="zoom-controls">
+            <button id="zoom-out" class="zoom-button" title="Zoom Out">-</button>
+            <span id="zoom-level">150%</span>
+            <button id="zoom-in" class="zoom-button" title="Zoom In">+</button>
+            <button id="zoom-reset" class="zoom-button" title="Reset Zoom">↺</button>
+        </div>
+    </div>
+</div>                
                 <div class="answers-section">
                     <div class="answers-header">
                         <h3>Your Answers</h3>

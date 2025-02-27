@@ -19,6 +19,9 @@ document.addEventListener('DOMContentLoaded', function() {
         
         resultData = JSON.parse(resultDataJson);
         
+        // Initialize the PDF viewer
+        initPdfViewer();
+        
         // Load question paper PDF
         const questionPdf = sessionStorage.getItem('questionPdf');
         if (questionPdf) {
@@ -35,18 +38,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Set up event listeners
-    document.getElementById('prev-page').addEventListener('click', () => {
-        if (pageNum <= 1) return;
-        pageNum--;
-        queueRenderPage(pageNum);
-    });
-    
-    document.getElementById('next-page').addEventListener('click', () => {
-        if (pageNum >= pdfDoc.numPages) return;
-        pageNum++;
-        queueRenderPage(pageNum);
-    });
-    
     document.getElementById('new-exam').addEventListener('click', () => {
         window.location.href = 'custom-selector.html';
     });
@@ -63,6 +54,85 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('download-results').addEventListener('click', downloadResults);
     
     /**
+     * Initialize PDF viewer
+     */
+    function initPdfViewer() {
+        // Add PDF controls to the container
+        const pdfContainer = document.querySelector('.pdf-container');
+        
+        // Replace the PDF controls with enhanced version
+        const pdfControls = document.getElementById('pdf-controls');
+        if (pdfControls) {
+            pdfControls.innerHTML = `
+                <button id="prev-page" class="control-button" title="Previous Page">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </button>
+                <span id="page-info">Page 0 of 0</span>
+                <button id="next-page" class="control-button" title="Next Page">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </button>
+            `;
+        }
+        
+        // Replace the canvas container with enhanced version
+        const canvasContainer = document.querySelector('#pdf-render');
+        if (canvasContainer && canvasContainer.parentElement) {
+            const pdfViewer = document.createElement('div');
+            pdfViewer.className = 'pdf-viewer';
+            pdfViewer.innerHTML = `
+                <canvas id="pdf-render"></canvas>
+                <div class="zoom-controls">
+                    <button id="zoom-out" class="zoom-button" title="Zoom Out">-</button>
+                    <span id="zoom-level">150%</span>
+                    <button id="zoom-in" class="zoom-button" title="Zoom In">+</button>
+                    <button id="zoom-reset" class="zoom-button" title="Reset Zoom">↺</button>
+                </div>
+            `;
+            
+            // Replace canvas with the new viewer
+            canvasContainer.parentElement.replaceChild(pdfViewer, canvasContainer);
+            
+            // Update canvas reference
+            canvas = document.getElementById('pdf-render');
+            ctx = canvas.getContext('2d');
+        }
+        
+        // Add event listeners
+        document.getElementById('prev-page').addEventListener('click', previousPage);
+        document.getElementById('next-page').addEventListener('click', nextPage);
+        document.getElementById('zoom-in').addEventListener('click', zoomIn);
+        document.getElementById('zoom-out').addEventListener('click', zoomOut);
+        document.getElementById('zoom-reset').addEventListener('click', resetZoom);
+        
+        // Add keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextPage();
+            } else if (e.key === 'ArrowLeft' || e.key === 'Backspace') {
+                previousPage();
+            } else if (e.key === '+' || e.key === '=') {
+                zoomIn();
+            } else if (e.key === '-') {
+                zoomOut();
+            } else if (e.key === '0') {
+                resetZoom();
+            }
+        });
+        
+        // Add window resize handler
+        window.addEventListener('resize', function() {
+            if (pdfDoc) {
+                // Re-render current page on resize for responsive display
+                queueRenderPage(pageNum);
+            }
+        });
+    }
+    
+    /**
      * Load PDF from base64 data
      */
     function loadPdf(pdfData) {
@@ -77,89 +147,107 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Initial render
             renderPage(pageNum);
+            updateUI();
         }).catch(function(error) {
             console.error('Error loading PDF:', error);
         });
     }
     
-/**
- * Render a specific page of the PDF with proper A4 aspect ratio
- */
-function renderPage(num) {
-    pageRendering = true;
-    
-    pdfDoc.getPage(num).then(function(page) {
-        // A4 aspect ratio is 1:1.414 (width:height)
-        const A4_RATIO = 1 / 1.414;
+    /**
+     * Render a specific page of the PDF
+     */
+    function renderPage(num) {
+        pageRendering = true;
         
-        // Get original viewport
-        const originalViewport = page.getViewport({ scale: 1.0 });
+        // Show loading indicator
+        const loadingIndicator = document.createElement('div');
+        loadingIndicator.id = 'page-loading';
+        loadingIndicator.className = 'page-loading';
+        loadingIndicator.innerHTML = '<div class="loader-small"></div>';
         
-        // Get container dimensions
-        const parent = canvas.parentElement;
-        const containerWidth = parent.clientWidth - 40; // Subtract padding
-        const containerHeight = parent.clientHeight - 40;
-        
-        // Determine optimal scale based on container width while preserving A4 ratio
-        let scaledWidth = containerWidth;
-        let scaledHeight = containerWidth / A4_RATIO;
-        
-        // If the height exceeds container, scale based on height instead
-        if (scaledHeight > containerHeight) {
-            scaledHeight = containerHeight;
-            scaledWidth = containerHeight * A4_RATIO;
+        const pdfViewer = document.querySelector('.pdf-viewer');
+        if (pdfViewer && !document.getElementById('page-loading')) {
+            pdfViewer.appendChild(loadingIndicator);
         }
         
-        // Calculate scale that maintains page's natural aspect ratio
-        const widthScale = scaledWidth / originalViewport.width;
-        const heightScale = scaledHeight / originalViewport.height;
-        const scale = Math.min(widthScale, heightScale);
-        
-        // Create new viewport with calculated scale
-        const viewport = page.getViewport({ scale });
-        
-        // Set canvas dimensions
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
-        
-        // Center the canvas in its container if smaller than container
-        if (canvas.width < containerWidth) {
-            canvas.style.marginLeft = `${(containerWidth - canvas.width) / 2}px`;
-        } else {
-            canvas.style.marginLeft = '0';
-        }
-        
-        // Render the PDF page
-        const renderContext = {
-            canvasContext: ctx,
-            viewport: viewport,
-            intent: 'display'
-        };
-        
-        const renderTask = page.render(renderContext);
-        
-        renderTask.promise.then(function() {
-            pageRendering = false;
+        pdfDoc.getPage(num).then(function(page) {
+            // Standard A4 size with proper width:height ratio (1:√2)
+            // A4 aspect ratio is approximately 1:1.414
+            const A4_RATIO = 1 / 1.414;
             
-            if (pageNumPending !== null) {
-                renderPage(pageNumPending);
-                pageNumPending = null;
+            // Get original viewport
+            const originalViewport = page.getViewport({ scale: 1.0 });
+            
+            // Get container dimensions
+            const pdfViewer = document.querySelector('.pdf-viewer');
+            if (!pdfViewer) return;
+            
+            const containerWidth = pdfViewer.clientWidth - 40; // Subtract padding
+            const containerHeight = pdfViewer.clientHeight - 40;
+            
+            // Calculate scale based on container dimensions while preserving A4 ratio
+            let pageWidth = originalViewport.width;
+            let pageHeight = originalViewport.height;
+            let pageRatio = pageWidth / pageHeight;
+            
+            let scaledWidth, scaledHeight;
+            
+            if (pageRatio > A4_RATIO) {
+                // Page is wider than A4 ratio
+                scaledWidth = containerWidth;
+                scaledHeight = containerWidth / pageRatio;
+            } else {
+                // Page has A4 ratio or taller
+                scaledHeight = containerHeight;
+                scaledWidth = containerHeight * pageRatio;
+                
+                // Ensure width doesn't exceed container
+                if (scaledWidth > containerWidth) {
+                    scaledWidth = containerWidth;
+                    scaledHeight = containerWidth / pageRatio;
+                }
             }
+            
+            // Calculate final scale
+            const widthScale = scaledWidth / pageWidth;
+            const heightScale = scaledHeight / pageHeight;
+            const finalScale = Math.min(widthScale, heightScale) * scale;
+            
+            // Create viewport with calculated scale
+            const viewport = page.getViewport({ scale: finalScale });
+            
+            // Set canvas dimensions
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+            
+            // Render the PDF page
+            const renderContext = {
+                canvasContext: ctx,
+                viewport: viewport
+            };
+            
+            const renderTask = page.render(renderContext);
+            
+            renderTask.promise.then(function() {
+                pageRendering = false;
+                
+                // Remove loading indicator
+                const loadingIndicator = document.getElementById('page-loading');
+                if (loadingIndicator) {
+                    loadingIndicator.remove();
+                }
+                
+                if (pageNumPending !== null) {
+                    renderPage(pageNumPending);
+                    pageNumPending = null;
+                }
+            });
         });
-    });
-    
-    document.getElementById('page-info').textContent = `Page ${num} of ${pdfDoc.numPages}`;
-}
-
-/**
- * Add window resize handler to adjust PDF display when window size changes
- */
-window.addEventListener('resize', function() {
-    if (pdfDoc) {
-        // Re-render current page on resize to maintain proper aspect ratio
-        queueRenderPage(pageNum);
+        
+        document.getElementById('page-info').textContent = `Page ${num} of ${pdfDoc.numPages}`;
     }
-});    /**
+    
+    /**
      * Queue page rendering if another page is already rendering
      */
     function queueRenderPage(num) {
@@ -168,6 +256,87 @@ window.addEventListener('resize', function() {
         } else {
             renderPage(num);
         }
+    }
+    
+    /**
+     * Go to previous page
+     */
+    function previousPage() {
+        if (pageNum <= 1) {
+            return;
+        }
+        pageNum--;
+        queueRenderPage(pageNum);
+        updateUI();
+    }
+    
+    /**
+     * Go to next page
+     */
+    function nextPage() {
+        if (!pdfDoc || pageNum >= pdfDoc.numPages) {
+            return;
+        }
+        pageNum++;
+        queueRenderPage(pageNum);
+        updateUI();
+    }
+    
+    /**
+     * Zoom in the PDF
+     */
+    function zoomIn() {
+        scale += 0.25;
+        queueRenderPage(pageNum);
+        updateZoomLevel();
+    }
+    
+    /**
+     * Zoom out the PDF
+     */
+    function zoomOut() {
+        if (scale > 0.5) {
+            scale -= 0.25;
+            queueRenderPage(pageNum);
+            updateZoomLevel();
+        }
+    }
+    
+    /**
+     * Reset zoom to default
+     */
+    function resetZoom() {
+        scale = 1.5;
+        queueRenderPage(pageNum);
+        updateZoomLevel();
+    }
+    
+    /**
+     * Update zoom level display
+     */
+    function updateZoomLevel() {
+        const zoomLevel = document.getElementById('zoom-level');
+        if (zoomLevel) {
+            zoomLevel.textContent = `${Math.round(scale * 100)}%`;
+        }
+    }
+    
+    /**
+     * Update UI controls state
+     */
+    function updateUI() {
+        const prevButton = document.getElementById('prev-page');
+        const nextButton = document.getElementById('next-page');
+        
+        if (prevButton) {
+            prevButton.disabled = pageNum <= 1;
+        }
+        
+        if (nextButton) {
+            nextButton.disabled = !pdfDoc || pageNum >= pdfDoc.numPages;
+        }
+        
+        updateZoomLevel();
     }
     
     /**

@@ -1,0 +1,99 @@
+/* PDF Container Styles */
+.pdf-container {
+    background-color: var(--bg-primary);
+    border-radius: var(--radius-lg);
+    padding: 1rem;
+    box-shadow: var(--shadow-md);
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 150px);
+    overflow: hidden;
+}
+
+#pdf-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 1rem;
+}
+
+.control-button {
+    background-color: var(--bg-tertiary);
+    border: none;
+    border-radius: var(--radius-md);
+    padding: 0.5rem;
+    cursor: pointer;
+    transition: var(--transition-normal);
+    color: var(--text-primary);
+}
+
+.control-button:hover {
+    background-color: var(--border-color);
+}
+
+#page-info {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+/* PDF Viewer */
+.pdf-viewer {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #444;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    position: relative;
+}
+
+#pdf-render {
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+/* Zoom Controls */
+.zoom-controls {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    display: flex;
+    gap: 0.5rem;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 0.5rem;
+    border-radius: var(--radius-md);
+}
+
+.zoom-button {
+    background-color: var(--bg-tertiary);
+    border: none;
+    border-radius: var(--radius-sm);
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text-primary);
+}
+
+.zoom-button:hover {
+    background-color: var(--primary-color);
+}
+
+#zoom-level {
+    background-color: var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+    padding: 0.25rem 0.5rem;
+    color: var(--text-primary);
+    min-width: 50px;
+    text-align: center;
+}
