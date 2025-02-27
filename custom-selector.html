@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solvr - PDF MCQ Solver</title>
+    <link rel="stylesheet" href="styles/custom-selector.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <h1>Solvr</h1>
+            </div>
+            <p class="subtitle">Upload your question paper and mark scheme to start solving</p>
+        </header>
+
+        <main>
+            <div class="uploader-section">
+                <div class="upload-box" id="question-uploader">
+                    <div class="upload-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="12" y1="18" x2="12" y2="12"></line>
+                            <line x1="9" y1="15" x2="15" y2="15"></line>
+                        </svg>
+                    </div>
+                    <h3>Question Paper</h3>
+                    <p>Upload your exam question paper</p>
+                    <input type="file" id="question-file" accept="application/pdf" hidden/>
+                    <button id="question-file-button" class="upload-button">Select PDF</button>
+                    <p class="file-name" id="question-file-name"></p>
+                </div>
+
+                <div class="upload-box" id="markscheme-uploader">
+                    <div class="upload-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <path d="M16 13l-4 4-4-4"></path>
+                            <path d="M12 12v5"></path>
+                        </svg>
+                    </div>
+                    <h3>Mark Scheme</h3>
+                    <p>Upload the corresponding mark scheme</p>
+                    <input type="file" id="markscheme-file" accept="application/pdf" hidden/>
+                    <button id="markscheme-file-button" class="upload-button">Select PDF</button>
+                    <p class="file-name" id="markscheme-file-name"></p>
+                </div>
+            </div>
+            
+            <div class="exam-settings">
+                <h3>Exam Settings</h3>
+                <div class="settings-grid">
+                    <div class="setting-group">
+                        <label for="subject">Subject</label>
+                        <input type="text" id="subject" placeholder="e.g. Chemistry">
+                    </div>
+                    <div class="setting-group">
+                        <label for="paper-code">Paper Code</label>
+                        <input type="text" id="paper-code" placeholder="e.g. 0620/11">
+                    </div>
+                    <div class="setting-group">
+                        <label for="exam-duration">Exam Duration (minutes)</label>
+                        <input type="number" id="exam-duration" min="15" step="5" value="45">
+                    </div>
+                    <div class="setting-group">
+                        <label for="total-questions">Number of Questions</label>
+                        <input type="number" id="total-questions" min="1" max="100" value="40">
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button id="start-exam" class="primary-button">Start Exam</button>
+            </div>
+        </main>
+
+        <div id="loading-overlay" class="hidden">
+            <div class="loader"></div>
+            <p>Processing PDFs...</p>
+        </div>
+
+        <div id="error-modal" class="modal hidden">
+            <div class="modal-content">
+                <h3>Error</h3>
+                <p id="error-message"></p>
+                <button id="error-close" class="primary-button">Close</button>
+            </div>
+        </div>
+
+        <footer>
+            Made with 💖 by <a href="https://github.com/arnavravinder">Arnav</a>. If you have any problems, please email arnav@solvr.in        </footer>
+    </div>
+
+    <script src="scripts/custom-selector.js"></script>
+    <script src="scripts/pdf-extractor.js"></script>
+</body>
+</html>

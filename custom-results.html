@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solvr - Exam Results</title>
+    <link rel="stylesheet" href="styles/custom-results.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-left">
+                <div class="logo">
+                    <h1>Solvr</h1>
+                </div>
+                <div class="exam-info">
+                    <h2 id="paper-title">Loading Results...</h2>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="score-container">
+                    <div class="score-box">
+                        <div class="score-value" id="score-value">0/0</div>
+                        <div class="score-percent" id="score-percent">0%</div>
+                    </div>
+                </div>
+                <button id="new-exam" class="primary-button">New Exam</button>
+            </div>
+        </header>
+
+        <main>
+            <div class="results-content">
+                <div class="pdf-container">
+                    <div id="pdf-controls">
+                        <button id="prev-page" class="control-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="15 18 9 12 15 6"></polyline>
+                            </svg>
+                        </button>
+                        <span id="page-info">Page 1 of 1</span>
+                        <button id="next-page" class="control-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </button>
+                    </div>
+                    <canvas id="pdf-render"></canvas>
+                </div>
+                
+                <div class="results-section">
+                    <div class="results-header">
+                        <h3>Exam Results</h3>
+                        <span id="time-taken">Time taken: 00:00:00</span>
+                    </div>
+                    <div class="results-summary">
+                        <div class="summary-item">
+                            <div class="summary-label">Correct</div>
+                            <div class="summary-value" id="correct-count">0</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">Wrong</div>
+                            <div class="summary-value" id="wrong-count">0</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">Unanswered</div>
+                            <div class="summary-value" id="unanswered-count">0</div>
+                        </div>
+                    </div>
+                    <div class="results-grid" id="results-grid">
+                        <!-- Result items will be generated here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <div class="action-buttons">
+            <button id="view-all-results" class="secondary-button">View Past Results</button>
+            <button id="download-results" class="primary-button">Download Results</button>
+        </div>
+
+        <div id="results-history-modal" class="modal hidden">
+            <div class="modal-content wide-modal">
+                <div class="modal-header">
+                    <h3>Past Results</h3>
+                    <button id="close-history" class="close-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+                <div class="history-table-container">
+                    <table id="history-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Subject</th>
+                                <th>Paper</th>
+                                <th>Score</th>
+                                <th>Percentage</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-table-body">
+                            <!-- History entries will be added here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="loading-overlay" class="hidden">
+            <div class="loader"></div>
+            <p>Loading...</p>
+        </div>
+    </div>
+
+    <script src="scripts/custom-results.js"></script>
+</body>
+</html>

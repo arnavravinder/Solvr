@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solvr - Exam in Progress</title>
+    <link rel="stylesheet" href="styles/custom-exam.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-left">
+                <div class="logo">
+                    <h1>Solvr</h1>
+                </div>
+                <div class="exam-info">
+                    <h2 id="paper-title">Loading...</h2>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="timer-container">
+                    <div class="timer">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                        <span id="timer-display">00:00:00</span>
+                    </div>
+                    <button id="add-time" class="time-button">Add 15 Minutes</button>
+                </div>
+                <button id="finish-exam" class="primary-button">Finish Exam</button>
+            </div>
+        </header>
+
+        <main>
+            <div class="exam-content">
+                <div class="pdf-container">
+                    <div id="pdf-controls">
+                        <button id="prev-page" class="control-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="15 18 9 12 15 6"></polyline>
+                            </svg>
+                        </button>
+                        <span id="page-info">Page 1 of 1</span>
+                        <button id="next-page" class="control-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </button>
+                    </div>
+                    <canvas id="pdf-render"></canvas>
+                </div>
+                
+                <div class="answers-section">
+                    <div class="answers-header">
+                        <h3>Your Answers</h3>
+                        <span id="progress-indicator">0/40 answered</span>
+                    </div>
+                    <div class="answers-grid" id="answers-grid">
+                        <!-- Answer buttons will be generated here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <div id="time-up-modal" class="modal hidden">
+            <div class="modal-content">
+                <h3>Time's Up!</h3>
+                <p>Your exam time has ended. Would you like to add 15 more minutes?</p>
+                <div class="modal-buttons">
+                    <button id="add-time-modal" class="primary-button">Add 15 Minutes</button>
+                    <button id="finish-now" class="secondary-button">Finish Now</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="confirm-finish-modal" class="modal hidden">
+            <div class="modal-content">
+                <h3>Finish Exam?</h3>
+                <p>Are you sure you want to finish the exam? You've answered <span id="answered-count">0</span> out of <span id="total-count">40</span> questions.</p>
+                <div class="modal-buttons">
+                    <button id="confirm-finish" class="primary-button">Yes, Finish Exam</button>
+                    <button id="cancel-finish" class="secondary-button">Continue Exam</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="loading-overlay" class="hidden">
+            <div class="loader"></div>
+            <p>Processing Results...</p>
+        </div>
+    </div>
+
+    <script src="scripts/custom-exam.js"></script>
+</body>
+</html>
