@@ -6,6 +6,7 @@
     <title>Solvr - Exam Results</title>
     <link rel="stylesheet" href="styles/custom-results.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -32,7 +33,22 @@
         <main>
             <div class="results-content">
                 <div class="pdf-container">
-                    <iframe id="pdfFrame" src="" style="width:100%; height:100%;" frameborder="0"></iframe>
+                    <div class="pdf-controls">
+                        <button id="prev-page" class="pdf-control-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="15 18 9 12 15 6"></polyline>
+                            </svg>
+                        </button>
+                        <span id="page-num">Page 1 of 1</span>
+                        <button id="next-page" class="pdf-control-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="pdf-viewer">
+                        <canvas id="pdf-canvas"></canvas>
+                    </div>
                 </div>
                 
                 <div class="results-section">

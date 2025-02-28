@@ -151,6 +151,58 @@ main {
     overflow: hidden;
 }
 
+.pdf-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.pdf-control-button {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: none;
+    border-radius: var(--radius-md);
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition-normal);
+}
+
+.pdf-control-button:hover {
+    background-color: var(--primary-color);
+}
+
+.pdf-control-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+#page-num {
+    margin: 0 1rem;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.pdf-viewer {
+    flex: 1;
+    overflow: auto;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    background-color: #444;
+    border-radius: var(--radius-md);
+    padding: 1rem;
+}
+
+#pdf-canvas {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
 .results-section {
     background-color: var(--bg-primary);
     border-radius: var(--radius-lg);

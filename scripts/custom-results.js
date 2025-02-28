@@ -1,5 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
     let resultData = null;
+    let pdfDoc = null;
+    let pageNum = 1;
+    let pageRendering = false;
+    let pageNumPending = null;
+    let scale = 1.5;
     
     try {
         const resultDataJson = sessionStorage.getItem('currentResult');
@@ -38,9 +43,91 @@ document.addEventListener('DOMContentLoaded', function() {
     
     document.getElementById('download-results').addEventListener('click', downloadResults);
     
+    document.getElementById('prev-page').addEventListener('click', () => {
+        if (pageNum <= 1) return;
+        pageNum--;
+        queueRenderPage(pageNum);
+    });
+    
+    document.getElementById('next-page').addEventListener('click', () => {
+        if (!pdfDoc || pageNum >= pdfDoc.numPages) return;
+        pageNum++;
+        queueRenderPage(pageNum);
+    });
+    
     function loadPdf(pdfDataUrl) {
-        const pdfFrame = document.getElementById('pdfFrame');
-        pdfFrame.src = pdfDataUrl;
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+        
+        const loadingTask = pdfjsLib.getDocument(pdfDataUrl);
+        loadingTask.promise.then(function(pdf) {
+            pdfDoc = pdf;
+            document.getElementById('page-num').textContent = `Page ${pageNum} of ${pdf.numPages}`;
+            renderPage(pageNum);
+            updateNavButtons();
+        }).catch(function(error) {
+            console.error('Error loading PDF:', error);
+        });
+    }
+    
+    function renderPage(num) {
+        pageRendering = true;
+        
+        pdfDoc.getPage(num).then(function(page) {
+            const viewport = page.getViewport({ scale: 1.0 });
+            const canvas = document.getElementById('pdf-canvas');
+            const ctx = canvas.getContext('2d');
+            
+            const containerWidth = canvas.closest('.pdf-viewer').clientWidth - 40;
+            const containerHeight = canvas.closest('.pdf-viewer').clientHeight - 40;
+            
+            const pdfAspectRatio = viewport.width / viewport.height;
+            let scaleFactor;
+            
+            if (containerWidth / containerHeight < pdfAspectRatio) {
+                scaleFactor = containerWidth / viewport.width;
+            } else {
+                scaleFactor = containerHeight / viewport.height;
+            }
+            
+            scaleFactor = Math.min(scaleFactor * scale, 2.5);
+            
+            const scaledViewport = page.getViewport({ scale: scaleFactor });
+            
+            canvas.width = scaledViewport.width;
+            canvas.height = scaledViewport.height;
+            
+            const renderContext = {
+                canvasContext: ctx,
+                viewport: scaledViewport
+            };
+            
+            const renderTask = page.render(renderContext);
+            
+            renderTask.promise.then(function() {
+                pageRendering = false;
+                
+                if (pageNumPending !== null) {
+                    renderPage(pageNumPending);
+                    pageNumPending = null;
+                }
+            });
+        });
+        
+        document.getElementById('page-num').textContent = `Page ${num} of ${pdfDoc.numPages}`;
+        updateNavButtons();
+    }
+    
+    function queueRenderPage(num) {
+        if (pageRendering) {
+            pageNumPending = num;
+        } else {
+            renderPage(num);
+        }
+    }
+    
+    function updateNavButtons() {
+        document.getElementById('prev-page').disabled = pageNum <= 1;
+        document.getElementById('next-page').disabled = pageNum >= pdfDoc.numPages;
     }
     
     function displayResults(result) {
@@ -264,4 +351,10 @@ document.addEventListener('DOMContentLoaded', function() {
         
         return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     }
+    
+    window.addEventListener('resize', function() {
+        if (pdfDoc) {
+            renderPage(pageNum);
+        }
+    });
 });
