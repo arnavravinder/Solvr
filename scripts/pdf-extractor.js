@@ -1,180 +1,74 @@
 class SolvrPDFExtractor {
   constructor(options = {}) {
-    this.options = {
-      apiUrl: 'https://solvr-api-wheat.vercel.app/',
-      onSuccess: null,
-      onError: null,
-      ...options
-    };
-  }
-
-  async extractAnswers(pdfFile) {
-    try {
-      if (!pdfFile || pdfFile.type !== 'application/pdf') {
-        throw new Error('Invalid file. Please upload a PDF file.');
-      }
-
-      const API_URL = this.options.apiUrl || '/api/extract-answers';
-      
-      const formData = new FormData();
-      formData.append('pdfFile', pdfFile);
-      
-      const response = await fetch(API_URL, {
-        method: 'POST',
-        body: formData,
-        mode: 'cors',
-        headers: {
-          'Origin': window.location.origin
-        }
-      }).catch(error => {
-        console.error('Network error:', error);
-        
-        // If CORS error, try using a proxy or fallback method
-        return this.fallbackExtraction(pdfFile);
-      });
-      
-      if (!response.ok) {
-        // If the response is not OK, try fallback method
-        return this.fallbackExtraction(pdfFile);
-      }
-      
-      const data = await response.json();
-      
-      this.saveDataToLocalStorage(data);
-      
-      if (typeof this.options.onSuccess === 'function') {
-        this.options.onSuccess(data);
-      }
-      
-      return data;
-    } catch (error) {
-      console.error('Error extracting answers:', error);
-      
-      if (typeof this.options.onError === 'function') {
-        this.options.onError(error);
-      }
-      
-      throw error;
-    }
+      this.apiUrl = options.apiUrl || '/api/extract-answers';
+      this.onSuccess = options.onSuccess || function() {};
+      this.onError = options.onError || function() {};
   }
   
-  async fallbackExtraction(pdfFile) {
-    // Try to use a proxy URL or direct API
-    try {
-      const formData = new FormData();
-      formData.append('pdfFile', pdfFile);
-      
-      // Try a different approach - proxy through your own API
-      const response = await fetch('/api/proxy-extraction', {
-        method: 'POST',
-        body: formData
-      });
-      
-      if (!response.ok) {
-        throw new Error(`Server error: ${response.status} ${response.statusText}`);
+  async extractAnswers(file) {
+      try {
+          if (!file || file.type !== 'application/pdf') {
+              throw new Error('Please provide a valid PDF file');
+          }
+          
+          const formData = new FormData();
+          formData.append('pdfFile', file);
+          
+          const response = await fetch(this.apiUrl, {
+              method: 'POST',
+              body: formData
+          });
+          
+          if (!response.ok) {
+              const errorData = await response.json().catch(() => ({}));
+              throw new Error(errorData.error || `Server error: ${response.status}`);
+          }
+          
+          const data = await response.json();
+          
+          if (this.onSuccess && typeof this.onSuccess === 'function') {
+              this.onSuccess(data);
+          }
+          
+          return data;
+      } catch (error) {
+          if (this.onError && typeof this.onError === 'function') {
+              this.onError(error);
+          }
+          throw error;
       }
-      
-      return response;
-    } catch (fallbackError) {
-      console.error('Fallback extraction failed:', fallbackError);
-      throw new Error('PDF extraction failed due to CORS restrictions. Please try a different approach or contact support.');
-    }
   }
   
-  saveDataToLocalStorage(data) {
-    try {
-      const paperCode = Object.keys(data).find(key => key !== 'metadata' && key !== 'questions');
+  static getNameFromCode(code) {
+      const parts = code.split('_');
+      if (parts.length < 3) return code;
       
-      if (!paperCode) {
-        console.error('No paper code found in the response');
-        return;
+      const subjectCode = parts[0];
+      const season = parts[1];
+      const paperNumber = parts[2];
+      
+      let seasonDisplay = '';
+      if (season.startsWith('s')) {
+          seasonDisplay = 'Summer 20' + season.substring(1);
+      } else if (season.startsWith('w')) {
+          seasonDisplay = 'Winter 20' + season.substring(1);
       }
       
-      const answers = data[paperCode];
-      
-      const existingAnswersJson = localStorage.getItem('solvrAnswers') || '{}';
-      const existingAnswers = JSON.parse(existingAnswersJson);
-      
-      const updatedAnswers = {
-        ...existingAnswers,
-        [paperCode]: answers
+      const subjectMap = {
+          '0455': 'Economics',
+          '0580': 'Mathematics',
+          '0620': 'Chemistry',
+          '0625': 'Physics',
+          '0610': 'Biology',
+          '0470': 'History',
+          '0460': 'Geography',
+          '0417': 'ICT',
+          '0478': 'Computer Science',
+          '0450': 'Business Studies'
       };
       
-      localStorage.setItem('solvrAnswers', JSON.stringify(updatedAnswers));
+      const subject = subjectMap[subjectCode] || `Subject ${subjectCode}`;
       
-      if (data.metadata) {
-        const existingMetadataJson = localStorage.getItem('solvrMetadata') || '{}';
-        const existingMetadata = JSON.parse(existingMetadataJson);
-        
-        const updatedMetadata = {
-          ...existingMetadata,
-          [paperCode]: data.metadata
-        };
-        
-        localStorage.setItem('solvrMetadata', JSON.stringify(updatedMetadata));
-      }
-      
-      if (data.questions && data.questions.length > 0) {
-        const existingQuestionsJson = localStorage.getItem('solvrQuestions') || '{}';
-        const existingQuestions = JSON.parse(existingQuestionsJson);
-        
-        const updatedQuestions = {
-          ...existingQuestions,
-          [paperCode]: data.questions
-        };
-        
-        localStorage.setItem('solvrQuestions', JSON.stringify(updatedQuestions));
-      }
-      
-      console.log(`Data for ${paperCode} saved to localStorage successfully`);
-    } catch (error) {
-      console.error('Error saving to localStorage:', error);
-    }
-  }
-  
-  getQuestionData(paperCode, questionNumber) {
-    try {
-      const questionsJson = localStorage.getItem('solvrQuestions') || '{}';
-      const questions = JSON.parse(questionsJson);
-      
-      if (questions[paperCode] && Array.isArray(questions[paperCode])) {
-        return questions[paperCode].find(q => q.number === questionNumber) || null;
-      }
-    } catch (error) {
-      console.error('Error getting question data:', error);
-    }
-    return null;
-  }
-  
-  getAnswers(paperCode) {
-    try {
-      const answersJson = localStorage.getItem('solvrAnswers') || '{}';
-      const answers = JSON.parse(answersJson);
-      
-      return answers[paperCode] || null;
-    } catch (error) {
-      console.error('Error getting answers:', error);
-      return null;
-    }
-  }
-  
-  getMetadata(paperCode) {
-    try {
-      const metadataJson = localStorage.getItem('solvrMetadata') || '{}';
-      const metadata = JSON.parse(metadataJson);
-      
-      return metadata[paperCode] || null;
-    } catch (error) {
-      console.error('Error getting metadata:', error);
-      return null;
-    }
-  }
-  
-  clearAllData() {
-    localStorage.removeItem('solvrAnswers');
-    localStorage.removeItem('solvrMetadata');
-    localStorage.removeItem('solvrQuestions');
+      return `${subject} ${seasonDisplay} Paper ${paperNumber}`;
   }
 }
-
-window.SolvrPDFExtractor = SolvrPDFExtractor;

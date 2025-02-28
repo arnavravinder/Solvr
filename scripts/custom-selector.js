@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const pdfExtractor = new SolvrPDFExtractor({
         onSuccess: (data) => {
             extractedAnswers = data;
+            autoFillFormFields(data);
         },
         onError: (error) => {
             showError(`Failed to extract answers: ${error.message}`);
@@ -47,6 +48,8 @@ document.addEventListener('DOMContentLoaded', function() {
             questionPdfFile = file;
             questionFileName.textContent = file.name;
             questionUploader.classList.add('has-file');
+            
+            parseQuestionPdf(file);
         } else {
             showError('Please select a valid PDF file');
         }
@@ -63,6 +66,159 @@ document.addEventListener('DOMContentLoaded', function() {
             processMarkScheme(file);
         } else {
             showError('Please select a valid PDF file');
+        }
+    }
+    
+    async function parseQuestionPdf(file) {
+        try {
+            showLoading(true);
+            
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+            
+            const arrayBuffer = await file.arrayBuffer();
+            const pdfData = new Uint8Array(arrayBuffer);
+            const loadingTask = pdfjsLib.getDocument({data: pdfData});
+            const pdf = await loadingTask.promise;
+            
+            let extractedText = '';
+            const maxPages = Math.min(5, pdf.numPages);
+            
+            for (let i = 1; i <= maxPages; i++) {
+                const page = await pdf.getPage(i);
+                const textContent = await page.getTextContent();
+                const pageText = textContent.items.map(item => item.str).join(' ');
+                extractedText += pageText + '\n';
+            }
+            
+            const metadata = extractBasicMetadata(extractedText, file.name);
+            
+            if (metadata.subject) {
+                document.getElementById('subject').value = metadata.subject;
+            }
+            
+            if (metadata.paperCode) {
+                document.getElementById('paper-code').value = metadata.paperCode;
+            }
+            
+            if (metadata.examDuration) {
+                document.getElementById('exam-duration').value = metadata.examDuration;
+            }
+            
+            if (metadata.totalQuestions) {
+                document.getElementById('total-questions').value = metadata.totalQuestions;
+            }
+            
+            showLoading(false);
+        } catch (error) {
+            console.error('Error parsing question PDF:', error);
+            showLoading(false);
+        }
+    }
+    
+    function extractBasicMetadata(text, filename) {
+        const metadata = {};
+        
+        const subjectPatterns = [
+            /Cambridge International (.*?) \(\d{4}\)/i,
+            /(Mathematics|Chemistry|Physics|Biology|Economics|Business|Geography|History) \d{4}/i,
+            /(IGCSE|O Level) (.*?)(?:\r|\n|\s{2,})/i
+        ];
+        
+        for (const pattern of subjectPatterns) {
+            const match = text.match(pattern);
+            if (match) {
+                metadata.subject = match[1] || match[2];
+                break;
+            }
+        }
+        
+        const paperCodePatterns = [
+            /(\d{4})\/(\d{2})/,
+            /Syllabus Code:\s*(\d{4})/i
+        ];
+        
+        for (const pattern of paperCodePatterns) {
+            const match = text.match(pattern);
+            if (match) {
+                metadata.paperCode = match[1] + '/' + (match[2] || '01');
+                break;
+            }
+        }
+        
+        const timePatterns = [
+            /(\d+)\s*(?:hour|hr|h)?s?\s*(?:and)?\s*(\d+)?\s*(?:minute|min|m)?s?/i,
+            /time\s*allowed\s*:\s*(\d+)\s*(?:hour|hr|h)?s?(?:\s*and\s*)?(\d+)?\s*(?:minute|min|m)?s?/i,
+            /duration\s*:\s*(\d+)\s*(?:minute|min|m)?s?/i
+        ];
+        
+        for (const pattern of timePatterns) {
+            const match = text.match(pattern);
+            if (match) {
+                let minutes = 0;
+                if (pattern.toString().includes('minute|min|m') && !pattern.toString().includes('hour|hr|h')) {
+                    minutes = parseInt(match[1] || '45');
+                } else {
+                    if (match[1]) minutes += parseInt(match[1]) * 60;
+                    if (match[2]) minutes += parseInt(match[2]);
+                    if (minutes === 0) minutes = 45; // Default
+                }
+                metadata.examDuration = minutes;
+                break;
+            }
+        }
+        
+        const questionPatterns = [
+            /there\s+are\s+(\d+)\s+questions/i,
+            /answer\s+all\s+(\d+)\s+questions/i,
+            /this\s+paper\s+contains\s+(\d+)\s+questions/i,
+            /(\d+)\s+multiple\s+choice\s+questions/i
+        ];
+        
+        for (const pattern of questionPatterns) {
+            const match = text.match(pattern);
+            if (match) {
+                metadata.totalQuestions = parseInt(match[1]);
+                break;
+            }
+        }
+        
+        if (!metadata.totalQuestions) {
+            metadata.totalQuestions = 40;
+        }
+        
+        if (!metadata.examDuration) {
+            metadata.examDuration = 45;
+        }
+        
+        if (!metadata.paperCode) {
+            const fileMatch = filename.match(/(\d{4})[-_\s]*(s|w)(\d{2})[-_\s]*(qp|ms)[-_\s]*(\d{2})/i);
+            if (fileMatch) {
+                metadata.paperCode = `${fileMatch[1]}/${fileMatch[5]}`;
+            }
+        }
+        
+        return metadata;
+    }
+    
+    function autoFillFormFields(data) {
+        if (!data || !data.metadata) return;
+        
+        const metadata = data.metadata;
+        
+        if (metadata.subject && !document.getElementById('subject').value) {
+            document.getElementById('subject').value = metadata.subject;
+        }
+        
+        if (metadata.paperCode && !document.getElementById('paper-code').value) {
+            document.getElementById('paper-code').value = metadata.paperCode;
+        }
+        
+        if (metadata.examDuration && !document.getElementById('exam-duration').value) {
+            document.getElementById('exam-duration').value = metadata.examDuration;
+        }
+        
+        if (metadata.totalQuestions && !document.getElementById('total-questions').value) {
+            document.getElementById('total-questions').value = metadata.totalQuestions;
         }
     }
     
@@ -95,7 +251,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const examDuration = parseInt(document.getElementById('exam-duration').value) || 45;
         const totalQuestions = parseInt(document.getElementById('total-questions').value) || 40;
         
-        const msCode = Object.keys(extractedAnswers)[0];
+        const msCode = Object.keys(extractedAnswers).find(key => key !== 'metadata' && key !== 'questions');
         
         if (!msCode) {
             return showError('Failed to determine mark scheme code');
@@ -118,17 +274,14 @@ document.addEventListener('DOMContentLoaded', function() {
         
         showLoading(true);
         
-        // Read the question PDF as data URL
         const questionReader = new FileReader();
         questionReader.onload = function(e) {
-            examData.questionPdf = e.target.result; // This is a data URL (base64)
+            examData.questionPdf = e.target.result;
             
-            // Read the mark scheme PDF as data URL
             const markSchemeReader = new FileReader();
             markSchemeReader.onload = function(e) {
-                examData.markSchemePdf = e.target.result; // This is a data URL (base64)
+                examData.markSchemePdf = e.target.result;
                 
-                // Save to session storage and redirect
                 sessionStorage.setItem('currentExam', JSON.stringify(examData));
                 window.location.href = 'custom-exam.html';
             };
@@ -174,154 +327,4 @@ document.addEventListener('DOMContentLoaded', function() {
         errorMessage.textContent = message;
         errorModal.classList.remove('hidden');
     }
-});
-
-// Add this function to custom-selector.js to handle CORS issues
-
-async function processMarkScheme(file) {
-    try {
-        showLoading(true);
-        
-        // First try with direct API call
-        try {
-            const pdfExtractor = new SolvrPDFExtractor({
-                apiUrl: '/api/proxy-extraction', // Use local proxy API instead
-                onSuccess: (data) => {
-                    console.log('Extraction successful:', data);
-                    extractedAnswers = data;
-                },
-                onError: (error) => {
-                    console.error('Extraction failed:', error);
-                    showError(`Failed to extract answers: ${error.message}`);
-                }
-            });
-            
-            await pdfExtractor.extractAnswers(file);
-            showLoading(false);
-            return;
-        } catch (apiError) {
-            console.error('API extraction failed, trying manual extraction:', apiError);
-            // Continue to manual extraction if API fails
-        }
-        
-        // Manual extraction fallback
-        try {
-            const reader = new FileReader();
-            reader.onload = async function(e) {
-                try {
-                    const pdfData = new Uint8Array(e.target.result);
-                    const loadingTask = pdfjsLib.getDocument({data: pdfData});
-                    const pdf = await loadingTask.promise;
-                    
-                    let extractedText = '';
-                    for (let i = 1; i <= pdf.numPages; i++) {
-                        const page = await pdf.getPage(i);
-                        const textContent = await page.getTextContent();
-                        const pageText = textContent.items.map(item => item.str).join(' ');
-                        extractedText += pageText + '\n';
-                    }
-                    
-                    // Simple extraction logic
-                    const answers = parseAnswersFromText(extractedText);
-                    
-                    // Create a response object similar to the API
-                    const paperCode = getCodeFromFilename(file.name);
-                    extractedAnswers = {
-                        [paperCode]: answers
-                    };
-                    
-                    // Save to localStorage
-                    const existingAnswersJson = localStorage.getItem('solvrAnswers') || '{}';
-                    const existingAnswers = JSON.parse(existingAnswersJson);
-                    existingAnswers[paperCode] = answers;
-                    localStorage.setItem('solvrAnswers', JSON.stringify(existingAnswers));
-                    
-                    showLoading(false);
-                } catch (error) {
-                    console.error('Error in PDF processing:', error);
-                    showError(`Failed to process PDF: ${error.message}`);
-                    showLoading(false);
-                }
-            };
-            reader.onerror = function(error) {
-                console.error('Error reading file:', error);
-                showError(`Error reading file: ${error.message}`);
-                showLoading(false);
-            };
-            reader.readAsArrayBuffer(file);
-        } catch (manualError) {
-            console.error('Manual extraction failed:', manualError);
-            showError(`Failed to extract answers: ${manualError.message}`);
-            showLoading(false);
-        }
-    } catch (error) {
-        console.error('Overall processing error:', error);
-        showError(`Failed to process mark scheme: ${error.message}`);
-        showLoading(false);
-    }
-}
-
-// Helper function to parse answers from text
-function parseAnswersFromText(text) {
-    const answers = Array(40).fill(null);
-    
-    // Try to match patterns like "1 A", "2 B", etc.
-    const lines = text.split('\n');
-    
-    // Try different patterns
-    for (const line of lines) {
-        // Pattern: "1 A"
-        const simpleMatch = line.match(/^(\d+)\s+([A-D])/);
-        if (simpleMatch) {
-            const questionNumber = parseInt(simpleMatch[1]);
-            const answer = simpleMatch[2];
-            
-            if (questionNumber >= 1 && questionNumber <= 40) {
-                answers[questionNumber - 1] = answer;
-            }
-            continue;
-        }
-        
-        // Pattern: "1. A" or "Question 1: A"
-        const complexMatch = line.match(/(?:Question\s*)?(\d+)(?:\.|\:)\s*([A-D])/i);
-        if (complexMatch) {
-            const questionNumber = parseInt(complexMatch[1]);
-            const answer = complexMatch[2];
-            
-            if (questionNumber >= 1 && questionNumber <= 40) {
-                answers[questionNumber - 1] = answer;
-            }
-        }
-    }
-    
-    // If we found very few answers, try a broader approach
-    if (answers.filter(a => a !== null).length < 10) {
-        // Look for any number followed by a letter A-D
-        const regex = /(\d+)\s+([A-D])/g;
-        let match;
-        
-        while ((match = regex.exec(text)) !== null) {
-            const questionNumber = parseInt(match[1]);
-            const answer = match[2];
-            
-            if (questionNumber >= 1 && questionNumber <= 40) {
-                answers[questionNumber - 1] = answer;
-            }
-        }
-    }
-    
-    return answers;
-}
-
-// Helper function to get code from filename
-function getCodeFromFilename(filename) {
-    // Try to match common Cambridge exam pattern
-    const matches = filename.match(/(\d{4})[-_\s]*(s|w)(\d{2})[-_\s]*(ms|qp)[-_\s]*(\d{2})/i);
-    
-    if (matches) {
-        return `${matches[1]}_${matches[2].toLowerCase()}${matches[3]}_${matches[4].toLowerCase()}_${matches[5]}`;
-    }
-    
-    // Use filename without extension as fallback
-    return filename.replace(/\.[^/.]+$/, "").replace(/\s+/g, '_').toLowerCase();
-}
+    })
