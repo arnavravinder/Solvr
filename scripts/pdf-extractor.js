@@ -21,7 +21,7 @@ class SolvrPDFExtractor {
         }
   
         // Get the API URL
-        const API_URL = this.options.apiUrl || '/api/extract-answers';
+        const API_URL = this.options.apiUrl || 'https://solvr-api-wheat.vercel.app/api/extract-answers';
         
         // Create form data
         const formData = new FormData();
