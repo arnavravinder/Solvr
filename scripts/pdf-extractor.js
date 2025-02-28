@@ -1,6 +1,6 @@
 class SolvrPDFExtractor {
   constructor(options = {}) {
-      this.apiUrl = options.apiUrl || 'https://solvr-api-wheat.vercel.app//api/extract-answers';
+      this.apiUrl = options.apiUrl || 'https://solvr-api-wheat.vercel.app/api/extract-answers';
       this.onSuccess = options.onSuccess || function() {};
       this.onError = options.onError || function() {};
   }
