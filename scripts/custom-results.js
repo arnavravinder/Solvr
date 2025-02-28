@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let pageNum = 1;
     let pageRendering = false;
     let pageNumPending = null;
-    let scale = 1.5;
+    let scale = 1.0;
     
     try {
         const resultDataJson = sessionStorage.getItem('currentResult');
@@ -77,21 +77,15 @@ document.addEventListener('DOMContentLoaded', function() {
             const canvas = document.getElementById('pdf-canvas');
             const ctx = canvas.getContext('2d');
             
-            const containerWidth = canvas.closest('.pdf-viewer').clientWidth - 40;
-            const containerHeight = canvas.closest('.pdf-viewer').clientHeight - 40;
+            const pdfContainer = canvas.closest('.pdf-viewer');
+            const containerWidth = pdfContainer.clientWidth;
+            const containerHeight = pdfContainer.clientHeight;
             
-            const pdfAspectRatio = viewport.width / viewport.height;
-            let scaleFactor;
+            const widthScale = containerWidth / viewport.width;
+            const heightScale = containerHeight / viewport.height;
+            const scaleToUse = Math.min(widthScale, heightScale);
             
-            if (containerWidth / containerHeight < pdfAspectRatio) {
-                scaleFactor = containerWidth / viewport.width;
-            } else {
-                scaleFactor = containerHeight / viewport.height;
-            }
-            
-            scaleFactor = Math.min(scaleFactor * scale, 2.5);
-            
-            const scaledViewport = page.getViewport({ scale: scaleFactor });
+            const scaledViewport = page.getViewport({ scale: scaleToUse });
             
             canvas.width = scaledViewport.width;
             canvas.height = scaledViewport.height;
