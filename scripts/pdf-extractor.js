@@ -21,11 +21,21 @@ class SolvrPDFExtractor {
       
       const response = await fetch(API_URL, {
         method: 'POST',
-        body: formData
+        body: formData,
+        mode: 'cors',
+        headers: {
+          'Origin': window.location.origin
+        }
+      }).catch(error => {
+        console.error('Network error:', error);
+        
+        // If CORS error, try using a proxy or fallback method
+        return this.fallbackExtraction(pdfFile);
       });
       
       if (!response.ok) {
-        throw new Error(`Server error: ${response.status} ${response.statusText}`);
+        // If the response is not OK, try fallback method
+        return this.fallbackExtraction(pdfFile);
       }
       
       const data = await response.json();
@@ -45,6 +55,29 @@ class SolvrPDFExtractor {
       }
       
       throw error;
+    }
+  }
+  
+  async fallbackExtraction(pdfFile) {
+    // Try to use a proxy URL or direct API
+    try {
+      const formData = new FormData();
+      formData.append('pdfFile', pdfFile);
+      
+      // Try a different approach - proxy through your own API
+      const response = await fetch('/api/proxy-extraction', {
+        method: 'POST',
+        body: formData
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status} ${response.statusText}`);
+      }
+      
+      return response;
+    } catch (fallbackError) {
+      console.error('Fallback extraction failed:', fallbackError);
+      throw new Error('PDF extraction failed due to CORS restrictions. Please try a different approach or contact support.');
     }
   }
   
