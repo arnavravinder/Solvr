@@ -35,7 +35,7 @@
 
 body {
     font-family: 'Inter', sans-serif;
-    background-color: var(--bg-secondary);
+    background-color: #1e293b;
     color: var(--text-primary);
     line-height: 1.5;
     height: 100vh;
@@ -56,7 +56,7 @@ header {
     justify-content: space-between;
     align-items: center;
     padding: 1rem;
-    background-color: var(--bg-primary);
+    background-color: #0f172a;
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-md);
     margin-bottom: 1rem;
@@ -112,7 +112,7 @@ header {
 }
 
 .primary-button {
-    background-color: var(--primary-color);
+    background-color: #4f46e5;
     color: white;
     padding: 0.75rem 1.5rem;
     border: none;
@@ -124,7 +124,7 @@ header {
 }
 
 .primary-button:hover {
-    background-color: var(--primary-hover);
+    background-color: #4338ca;
 }
 
 main {
@@ -141,7 +141,7 @@ main {
 }
 
 .pdf-container {
-    background-color: var(--bg-primary);
+    background-color: #1e293b;
     border-radius: var(--radius-lg);
     padding: 0;
     display: flex;
@@ -149,6 +149,7 @@ main {
     height: calc(100vh - 230px);
     overflow: hidden;
     position: relative;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .pdf-controls {
@@ -156,7 +157,7 @@ main {
     justify-content: center;
     align-items: center;
     padding: 0.5rem;
-    background-color: var(--bg-tertiary);
+    background-color: #0f172a;
     position: absolute;
     top: 0;
     left: 0;
@@ -167,7 +168,7 @@ main {
 }
 
 .pdf-control-button {
-    background-color: var(--bg-primary);
+    background-color: #1e293b;
     color: var(--text-primary);
     border: none;
     border-radius: var(--radius-md);
@@ -180,7 +181,7 @@ main {
 }
 
 .pdf-control-button:hover {
-    background-color: var(--primary-color);
+    background-color: #4f46e5;
 }
 
 .pdf-control-button:disabled {
@@ -199,7 +200,7 @@ main {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #444;
+    background-color: #f1f5f9;
     padding: 0;
     margin-top: 40px;
     overflow: auto;
@@ -211,13 +212,15 @@ main {
     background-color: white;
     display: block;
     max-width: 100%;
-    max-height: 100%;
+    height: auto;
     margin: 0 auto;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
 }
 
 .results-section {
-    background-color: var(--bg-primary);
+    background-color: #0f172a;
     border-radius: var(--radius-lg);
     padding: 1.5rem;
     box-shadow: var(--shadow-md);
@@ -231,7 +234,7 @@ main {
     align-items: center;
     margin-bottom: 1.5rem;
     padding-bottom: 1rem;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid #334155;
 }
 
 .results-header h3 {
@@ -243,7 +246,7 @@ main {
     font-size: 0.875rem;
     color: var(--text-secondary);
     padding: 0.25rem 0.75rem;
-    background-color: var(--bg-tertiary);
+    background-color: #334155;
     border-radius: var(--radius-md);
 }
 
@@ -256,7 +259,7 @@ main {
 
 .summary-item {
     padding: 1rem;
-    background-color: var(--bg-tertiary);
+    background-color: #1e293b;
     border-radius: var(--radius-md);
     text-align: center;
 }
@@ -291,7 +294,7 @@ main {
 }
 
 .result-item {
-    background-color: var(--bg-tertiary);
+    background-color: #1e293b;
     border-radius: var(--radius-md);
     padding: 1rem;
     transition: var(--transition-normal);
@@ -364,10 +367,10 @@ main {
 }
 
 .secondary-button {
-    background-color: var(--bg-tertiary);
+    background-color: #334155;
     color: var(--text-primary);
     padding: 0.75rem 1.5rem;
-    border: 1px solid var(--border-color);
+    border: 1px solid #475569;
     border-radius: var(--radius-md);
     font-weight: 500;
     font-size: 1rem;
@@ -376,7 +379,7 @@ main {
 }
 
 .secondary-button:hover {
-    background-color: var(--bg-primary);
+    background-color: #1e293b;
     border-color: var(--primary-color);
 }
 
@@ -394,7 +397,7 @@ main {
 }
 
 .modal-content {
-    background-color: var(--bg-primary);
+    background-color: #0f172a;
     border-radius: var(--radius-lg);
     padding: 2rem;
     max-width: 500px;
@@ -412,7 +415,7 @@ main {
     align-items: center;
     margin-bottom: 1.5rem;
     padding-bottom: 1rem;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid #334155;
 }
 
 .close-button {
@@ -439,17 +442,17 @@ table {
 th, td {
     padding: 0.75rem 1rem;
     text-align: left;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid #334155;
 }
 
 th {
     font-weight: 600;
     color: var(--text-secondary);
-    background-color: var(--bg-tertiary);
+    background-color: #1e293b;
 }
 
 tr:hover {
-    background-color: var(--bg-tertiary);
+    background-color: #1e293b;
 }
 
 .table-action {
@@ -468,7 +471,7 @@ tr:hover {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(15, 23, 42, 0.9);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -477,8 +480,8 @@ tr:hover {
 }
 
 .loader {
-    border: 4px solid var(--border-color);
-    border-top: 4px solid var(--primary-color);
+    border: 4px solid #334155;
+    border-top: 4px solid #4f46e5;
     border-radius: 50%;
     width: 50px;
     height: 50px;

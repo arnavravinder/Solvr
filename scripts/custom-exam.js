@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let pageNum = 1;
     let pageRendering = false;
     let pageNumPending = null;
-    let scale = 1.0;
+    let scale = 1.5;
     
     try {
         const examDataJson = sessionStorage.getItem('currentExam');
@@ -83,26 +83,27 @@ document.addEventListener('DOMContentLoaded', function() {
         pageRendering = true;
         
         pdfDoc.getPage(num).then(function(page) {
-            const viewport = page.getViewport({ scale: 1.0 });
             const canvas = document.getElementById('pdf-canvas');
             const ctx = canvas.getContext('2d');
             
-            const pdfContainer = canvas.closest('.pdf-viewer');
-            const containerWidth = pdfContainer.clientWidth;
-            const containerHeight = pdfContainer.clientHeight;
+            const container = document.querySelector('.pdf-viewer');
+            const containerWidth = container.clientWidth - 40;
             
-            const widthScale = containerWidth / viewport.width;
-            const heightScale = containerHeight / viewport.height;
-            const scaleToUse = Math.min(widthScale, heightScale);
+            const originalViewport = page.getViewport({ scale: 1.0 });
             
-            const scaledViewport = page.getViewport({ scale: scaleToUse });
+            const desiredScale = containerWidth / originalViewport.width;
             
-            canvas.width = scaledViewport.width;
-            canvas.height = scaledViewport.height;
+            const viewport = page.getViewport({ scale: desiredScale });
+            
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
             
             const renderContext = {
                 canvasContext: ctx,
-                viewport: scaledViewport
+                viewport: viewport,
+                enableWebGL: true,
+                renderInteractiveForms: true,
+                antialias: true
             };
             
             const renderTask = page.render(renderContext);
