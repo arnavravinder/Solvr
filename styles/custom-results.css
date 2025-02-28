@@ -199,9 +199,9 @@ main {
     flex: 1;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     background-color: #f1f5f9;
-    padding: 0;
+    padding: 15px 0;
     margin-top: 40px;
     overflow: auto;
     height: calc(100% - 40px);

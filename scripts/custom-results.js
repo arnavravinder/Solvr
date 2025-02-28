@@ -78,10 +78,19 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const container = document.querySelector('.pdf-viewer');
             const containerWidth = container.clientWidth - 40;
+            const containerHeight = container.clientHeight - 20;
             
             const originalViewport = page.getViewport({ scale: 1.0 });
             
-            const desiredScale = containerWidth / originalViewport.width;
+            // Calculate scale based on width but ensure height fits well too
+            let desiredScale = containerWidth / originalViewport.width;
+            
+            // Check if the resulting height would be too small and adjust if needed
+            const scaledHeight = originalViewport.height * desiredScale;
+            if (scaledHeight < containerHeight * 0.9) {
+                // If we have extra vertical space, make the PDF a bit taller
+                desiredScale = (containerHeight * 0.9) / originalViewport.height;
+            }
             
             const viewport = page.getViewport({ scale: desiredScale });
             
