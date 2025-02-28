@@ -73,8 +73,6 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             showLoading(true);
             
-            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
-            
             const arrayBuffer = await file.arrayBuffer();
             const pdfData = new Uint8Array(arrayBuffer);
             const loadingTask = pdfjsLib.getDocument({data: pdfData});
@@ -160,7 +158,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else {
                     if (match[1]) minutes += parseInt(match[1]) * 60;
                     if (match[2]) minutes += parseInt(match[2]);
-                    if (minutes === 0) minutes = 45; // Default
+                    if (minutes === 0) minutes = 45;
                 }
                 metadata.examDuration = minutes;
                 break;
@@ -171,19 +169,35 @@ document.addEventListener('DOMContentLoaded', function() {
             /there\s+are\s+(\d+)\s+questions/i,
             /answer\s+all\s+(\d+)\s+questions/i,
             /this\s+paper\s+contains\s+(\d+)\s+questions/i,
-            /(\d+)\s+multiple\s+choice\s+questions/i
+            /(\d+)\s+multiple\s+choice\s+questions/i,
+            /(\d+)\s+questions\s+in\s+this\s+paper/i
         ];
         
         for (const pattern of questionPatterns) {
             const match = text.match(pattern);
-            if (match) {
+            if (match && parseInt(match[1]) > 0) {
                 metadata.totalQuestions = parseInt(match[1]);
                 break;
             }
         }
         
         if (!metadata.totalQuestions) {
-            metadata.totalQuestions = 40;
+            const questionNumbers = [];
+            const questionNumberPattern = /^\s*(\d+)\s+[A-Za-z]/gm;
+            let questionMatch;
+            
+            while ((questionMatch = questionNumberPattern.exec(text)) !== null) {
+                const num = parseInt(questionMatch[1]);
+                if (!isNaN(num) && num > 0 && num <= 100) {
+                    questionNumbers.push(num);
+                }
+            }
+            
+            if (questionNumbers.length > 0) {
+                metadata.totalQuestions = Math.max(...questionNumbers);
+            } else {
+                metadata.totalQuestions = 30;
+            }
         }
         
         if (!metadata.examDuration) {
@@ -327,4 +341,4 @@ document.addEventListener('DOMContentLoaded', function() {
         errorMessage.textContent = message;
         errorModal.classList.remove('hidden');
     }
-    })
+});
