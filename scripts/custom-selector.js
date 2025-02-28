@@ -118,20 +118,23 @@ document.addEventListener('DOMContentLoaded', function() {
         
         showLoading(true);
         
-        const reader1 = new FileReader();
-        reader1.onload = function(e) {
-            examData.questionPdf = URL.createObjectURL(questionPdfFile);
+        // Read the question PDF as data URL
+        const questionReader = new FileReader();
+        questionReader.onload = function(e) {
+            examData.questionPdf = e.target.result; // This is a data URL (base64)
             
-            const reader2 = new FileReader();
-            reader2.onload = function(e) {
-                examData.markSchemePdf = URL.createObjectURL(markSchemePdfFile);
+            // Read the mark scheme PDF as data URL
+            const markSchemeReader = new FileReader();
+            markSchemeReader.onload = function(e) {
+                examData.markSchemePdf = e.target.result; // This is a data URL (base64)
                 
+                // Save to session storage and redirect
                 sessionStorage.setItem('currentExam', JSON.stringify(examData));
                 window.location.href = 'custom-exam.html';
             };
-            reader2.readAsDataURL(markSchemePdfFile);
+            markSchemeReader.readAsDataURL(markSchemePdfFile);
         };
-        reader1.readAsDataURL(questionPdfFile);
+        questionReader.readAsDataURL(questionPdfFile);
     }
     
     function setupDragDrop(container, handleFile) {

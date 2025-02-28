@@ -48,9 +48,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     document.getElementById('finish-now').addEventListener('click', finishExam);
     
-    function loadPdf(pdfUrl) {
+    function loadPdf(pdfDataUrl) {
         const pdfFrame = document.getElementById('pdfFrame');
-        pdfFrame.src = pdfUrl;
+        pdfFrame.src = pdfDataUrl;
     }
     
     function generateAnswerButtons(totalQuestions) {
@@ -208,7 +208,7 @@ document.addEventListener('DOMContentLoaded', function() {
         localStorage.setItem('solvrResults', JSON.stringify(storedResults));
         
         sessionStorage.setItem('currentResult', JSON.stringify(result));
-        sessionStorage.setItem('questionPdfUrl', examData.questionPdf);
+        sessionStorage.setItem('questionPdfDataUrl', examData.questionPdf);
         
         sessionStorage.removeItem('currentExam');
         

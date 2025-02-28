@@ -10,9 +10,9 @@ document.addEventListener('DOMContentLoaded', function() {
         
         resultData = JSON.parse(resultDataJson);
         
-        const questionPdfUrl = sessionStorage.getItem('questionPdfUrl');
-        if (questionPdfUrl) {
-            loadPdf(questionPdfUrl);
+        const questionPdfDataUrl = sessionStorage.getItem('questionPdfDataUrl');
+        if (questionPdfDataUrl) {
+            loadPdf(questionPdfDataUrl);
         }
         
         displayResults(resultData);
@@ -38,9 +38,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     document.getElementById('download-results').addEventListener('click', downloadResults);
     
-    function loadPdf(pdfUrl) {
+    function loadPdf(pdfDataUrl) {
         const pdfFrame = document.getElementById('pdfFrame');
-        pdfFrame.src = pdfUrl;
+        pdfFrame.src = pdfDataUrl;
     }
     
     function displayResults(result) {
