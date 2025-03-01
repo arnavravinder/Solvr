@@ -250,7 +250,13 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const correctAnswerValue = document.createElement('span');
             correctAnswerValue.className = 'answer-value correct';
-            correctAnswerValue.textContent = correctAnswer || 'Unknown';
+            
+            let cleanCorrectAnswer = correctAnswer || 'Unknown';
+            if (cleanCorrectAnswer && cleanCorrectAnswer.includes(' ')) {
+                cleanCorrectAnswer = cleanCorrectAnswer.split(' ')[0];
+            }
+            
+            correctAnswerValue.textContent = cleanCorrectAnswer;
             
             correctAnswerRow.appendChild(correctAnswerLabel);
             correctAnswerRow.appendChild(correctAnswerValue);
@@ -318,18 +324,33 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const questionDetails = document.createElement('div');
         questionDetails.className = 'question-details';
+        
+        let cleanQuestionText = questionData.text || '';
+        
+        let optionsHTML = '';
+        if (questionData.options && Array.isArray(questionData.options) && questionData.options.length > 0) {
+            optionsHTML = `
+                <div class="options-list">
+                    ${questionData.options.map(option => `
+                        <div class="option-item ${option.letter === questionData.correctAnswer ? 'correct-option' : ''}">
+                            <span class="option-letter">${option.letter}</span>
+                            <span class="option-text">${option.text}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+        
+        let correctAnswer = questionData.correctAnswer || '';
+        if (correctAnswer && correctAnswer.includes(' ')) {
+            correctAnswer = correctAnswer.split(' ')[0];
+        }
+        
         questionDetails.innerHTML = `
-            <p class="question-text">${questionData.text}</p>
-            <div class="options-list">
-                ${questionData.options.map(option => `
-                    <div class="option-item ${option.letter === questionData.correctAnswer ? 'correct-option' : ''}">
-                        <span class="option-letter">${option.letter}</span>
-                        <span class="option-text">${option.text}</span>
-                    </div>
-                `).join('')}
-            </div>
+            <p class="question-text">${cleanQuestionText}</p>
+            ${optionsHTML}
             <div class="correct-answer">
-                <p>Correct Answer: <strong>${questionData.correctAnswer || 'Not available'}</strong></p>
+                <p>Correct Answer: <strong>${correctAnswer || 'Not available'}</strong></p>
             </div>
         `;
         
@@ -389,10 +410,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 throw new Error(data.error);
             }
             
+            let responseText = '';
+            
+            if (data.response) {
+                responseText = data.response;
+            } else if (data?.data?.candidates?.[0]?.content?.parts?.[0]?.text) {
+                responseText = data.data.candidates[0].content.parts[0].text;
+            } else {
+                throw new Error('Invalid response format from AI service');
+            }
+            
+            if (!responseText) {
+                throw new Error('Empty response from AI service');
+            }
+            
             container.innerHTML = `
                 <h4>Explanation</h4>
                 <div class="explanation-text">
-                    ${data.response.split('\n').map(para => `<p>${para}</p>`).join('')}
+                    ${responseText.split('\n').map(para => `<p>${para}</p>`).join('')}
                 </div>
             `;
         } catch (error) {
@@ -708,7 +743,12 @@ document.addEventListener('DOMContentLoaded', function() {
         
         for (let i = 0; i < resultData.totalMax; i++) {
             const userAnswer = resultData.userAnswers[i] || 'None';
-            const correctAnswer = resultData.correctAnswers[i] || 'Unknown';
+            
+            let correctAnswer = resultData.correctAnswers[i] || 'Unknown';
+            if (correctAnswer && correctAnswer.includes(' ')) {
+                correctAnswer = correctAnswer.split(' ')[0];
+            }
+            
             let result = 'Not Answered';
             
             if (userAnswer !== 'None') {

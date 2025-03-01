@@ -116,74 +116,77 @@ document.addEventListener('DOMContentLoaded', function() {
     function extractBasicMetadata(text, filename) {
         const metadata = {};
         
-        const subjectPatterns = [
-            /Cambridge International (.*?) \(\d{4}\)/i,
-            /(Mathematics|Chemistry|Physics|Biology|Economics|Business|Geography|History) \d{4}/i,
-            /(IGCSE|O Level) (.*?)(?:\r|\n|\s{2,})/i
-        ];
-        
-        for (const pattern of subjectPatterns) {
-            const match = text.match(pattern);
-            if (match) {
-                metadata.subject = match[1] || match[2];
-                break;
+        const subjectMatch = text.match(/\b(Economics|Mathematics|Chemistry|Physics|Biology|Business|Geography|History|Computer Science)\b/i);
+        if (subjectMatch) {
+            metadata.subject = subjectMatch[1];
+        } else {
+            const codeMatch = filename.match(/(\d{4})/);
+            if (codeMatch) {
+                const subjectCodeMap = {
+                    '0455': 'Economics',
+                    '0580': 'Mathematics',
+                    '0620': 'Chemistry',
+                    '0625': 'Physics',
+                    '0610': 'Biology',
+                    '0470': 'History',
+                    '0460': 'Geography',
+                    '0417': 'ICT',
+                    '0478': 'Computer Science',
+                    '0450': 'Business Studies'
+                };
+                metadata.subject = subjectCodeMap[codeMatch[1]] || '';
             }
         }
         
-        const paperCodePatterns = [
-            /(\d{4})\/(\d{2})/,
-            /Syllabus Code:\s*(\d{4})/i
-        ];
-        
-        for (const pattern of paperCodePatterns) {
-            const match = text.match(pattern);
-            if (match) {
-                metadata.paperCode = match[1] + '/' + (match[2] || '01');
-                break;
+        const paperCodeMatch = text.match(/(\d{4})\/(\d{2})/);
+        if (paperCodeMatch) {
+            metadata.paperCode = paperCodeMatch[1] + '/' + paperCodeMatch[2];
+        } else {
+            const fileMatch = filename.match(/(\d{4})[-_\s]*(s|w)(\d{2})[-_\s]*(qp|ms)[-_\s]*(\d{2})/i);
+            if (fileMatch) {
+                metadata.paperCode = `${fileMatch[1]}/${fileMatch[5]}`;
             }
         }
         
-        const timePatterns = [
-            /(\d+)\s*(?:hour|hr|h)?s?\s*(?:and)?\s*(\d+)?\s*(?:minute|min|m)?s?/i,
-            /time\s*allowed\s*:\s*(\d+)\s*(?:hour|hr|h)?s?(?:\s*and\s*)?(\d+)?\s*(?:minute|min|m)?s?/i,
-            /duration\s*:\s*(\d+)\s*(?:minute|min|m)?s?/i
-        ];
-        
-        for (const pattern of timePatterns) {
-            const match = text.match(pattern);
-            if (match) {
-                let minutes = 0;
-                if (pattern.toString().includes('minute|min|m') && !pattern.toString().includes('hour|hr|h')) {
-                    minutes = parseInt(match[1] || '45');
-                } else {
-                    if (match[1]) minutes += parseInt(match[1]) * 60;
-                    if (match[2]) minutes += parseInt(match[2]);
-                    if (minutes === 0) minutes = 45;
-                }
+        const timeMatch = text.match(/(\d+)\s*(?:minute|min|m)s?/i);
+        if (timeMatch) {
+            const minutes = parseInt(timeMatch[1]);
+            if (minutes > 0 && minutes <= 180) {
                 metadata.examDuration = minutes;
-                break;
+            }
+        } else {
+            const hourTimeMatch = text.match(/(\d+)\s*(?:hour|hr|h)s?(?:\s*and\s*)?(\d+)?\s*(?:minute|min|m)?s?/i);
+            if (hourTimeMatch) {
+                let minutes = 0;
+                if (hourTimeMatch[1]) {
+                    const hours = parseInt(hourTimeMatch[1]);
+                    if (hours > 0 && hours <= 3) {
+                        minutes += hours * 60;
+                    }
+                }
+                if (hourTimeMatch[2]) minutes += parseInt(hourTimeMatch[2]);
+                
+                if (minutes > 0 && minutes <= 180) {
+                    metadata.examDuration = minutes;
+                }
             }
         }
         
-        const questionPatterns = [
-            /there\s+are\s+(\d+)\s+questions/i,
-            /answer\s+all\s+(\d+)\s+questions/i,
-            /this\s+paper\s+contains\s+(\d+)\s+questions/i,
-            /(\d+)\s+multiple\s+choice\s+questions/i,
-            /(\d+)\s+questions\s+in\s+this\s+paper/i
-        ];
+        if (!metadata.examDuration) {
+            metadata.examDuration = 45;
+        }
         
-        for (const pattern of questionPatterns) {
-            const match = text.match(pattern);
-            if (match && parseInt(match[1]) > 0) {
-                metadata.totalQuestions = parseInt(match[1]);
-                break;
+        const questionCountMatch = text.match(/(\d+)\s+(?:multiple[-\s]choice\s+)?questions/i);
+        if (questionCountMatch) {
+            const count = parseInt(questionCountMatch[1]);
+            if (count > 0 && count <= 100) {
+                metadata.totalQuestions = count;
             }
         }
         
         if (!metadata.totalQuestions) {
             const questionNumbers = [];
-            const questionNumberPattern = /^\s*(\d+)\s+[A-Za-z]/gm;
+            const questionNumberPattern = /\b(\d+)\b\s+[A-Za-z]/g;
             let questionMatch;
             
             while ((questionMatch = questionNumberPattern.exec(text)) !== null) {
@@ -197,17 +200,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 metadata.totalQuestions = Math.max(...questionNumbers);
             } else {
                 metadata.totalQuestions = 30;
-            }
-        }
-        
-        if (!metadata.examDuration) {
-            metadata.examDuration = 45;
-        }
-        
-        if (!metadata.paperCode) {
-            const fileMatch = filename.match(/(\d{4})[-_\s]*(s|w)(\d{2})[-_\s]*(qp|ms)[-_\s]*(\d{2})/i);
-            if (fileMatch) {
-                metadata.paperCode = `${fileMatch[1]}/${fileMatch[5]}`;
             }
         }
         
