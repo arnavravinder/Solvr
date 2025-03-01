@@ -50,6 +50,11 @@ document.addEventListener('DOMContentLoaded', function() {
             questionUploader.classList.add('has-file');
             
             parseQuestionPdf(file);
+            
+            // Try to extract if both files are ready
+            if (markSchemePdfFile) {
+                processFiles(questionPdfFile, markSchemePdfFile);
+            }
         } else {
             showError('Please select a valid PDF file');
         }
@@ -63,7 +68,13 @@ document.addEventListener('DOMContentLoaded', function() {
             markSchemeFileName.textContent = file.name;
             markSchemeUploader.classList.add('has-file');
             
-            processMarkScheme(file);
+            // Try to extract if both files are ready
+            if (questionPdfFile) {
+                processFiles(questionPdfFile, markSchemePdfFile);
+            } else {
+                // Legacy support - try with mark scheme only if no question file yet
+                processMarkScheme(file);
+            }
         } else {
             showError('Please select a valid PDF file');
         }
@@ -228,6 +239,45 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
+    // New function to process both files together
+    async function processFiles(questionFile, markSchemeFile) {
+        try {
+            showLoading(true);
+            
+            // Create a FormData object to send both files
+            const formData = new FormData();
+            formData.append('questionPdf', questionFile);
+            formData.append('markschemePdf', markSchemeFile);
+            
+            // Send both files to the API
+            const response = await fetch('/api/extract-answers', {
+                method: 'POST',
+                body: formData
+            });
+            
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.error || `Server error: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            
+            if (pdfExtractor.onSuccess && typeof pdfExtractor.onSuccess === 'function') {
+                pdfExtractor.onSuccess(data);
+            }
+            
+            showLoading(false);
+        } catch (error) {
+            console.error('Error processing files:', error);
+            if (pdfExtractor.onError && typeof pdfExtractor.onError === 'function') {
+                pdfExtractor.onError(error);
+            }
+            showLoading(false);
+            showError(`Failed to extract data: ${error.message}`);
+        }
+    }
+    
+    // Legacy function for backward compatibility
     async function processMarkScheme(file) {
         try {
             showLoading(true);
