@@ -250,7 +250,7 @@ document.addEventListener('DOMContentLoaded', function() {
             formData.append('markschemePdf', markSchemeFile);
             
             // Send both files to the API
-            const response = await fetch('/api/extract-answers', {
+            const response = await fetch('https://solvr-api-wheat.vercel.app/api/extract-answers', {
                 method: 'POST',
                 body: formData
             });
