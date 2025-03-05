@@ -38,6 +38,75 @@ body {
     flex:3;
     border-right:2px solid var(--accent);
     padding:0.5rem;
+    position: relative;
+    overflow: auto;
+}
+
+.pdf-canvas-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.pdf-controls {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(34, 40, 49, 0.8);
+    padding: 10px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.pdf-page-control {
+    background: var(--accent);
+    border: none;
+    color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.pdf-page-control:hover {
+    background: #86C0C3;
+}
+
+.pdf-page-info {
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 500;
+    min-width: 80px;
+    text-align: center;
+}
+
+.pdf-zoom-control {
+    background: #444;
+    border: none;
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.pdf-zoom-control:hover {
+    background: #555;
 }
 
 .question-panel {
@@ -75,29 +144,72 @@ body {
     margin-top:0.5rem;
 }
 
-.option-btn {
-    background:#2196F3;
+.option-btn[data-letter="A"] { 
+    background:transparent; 
+    border:2px solid #2196F3;
+    color:#2196F3;
+}
+.option-btn[data-letter="B"] { 
+    background:transparent; 
+    border:2px solid #F44336;
+    color:#F44336;
+}
+.option-btn[data-letter="C"] { 
+    background:transparent; 
+    border:2px solid #4CAF50;
+    color:#4CAF50;
+}
+.option-btn[data-letter="D"] { 
+    background:transparent; 
+    border:2px solid #FFC107;
+    color:#FFC107;
+}
+.option-btn[data-letter="E"] { 
+    background:transparent; 
+    border:2px solid #9C27B0;
+    color:#9C27B0;
+}
+.option-btn[data-letter="F"] { 
+    background:transparent; 
+    border:2px solid #E91E63;
+    color:#E91E63;
+}
+
+.option-btn[data-letter="A"].selected { 
+    background:#2196F3; 
     color:#fff;
+}
+.option-btn[data-letter="B"].selected { 
+    background:#F44336; 
+    color:#fff;
+}
+.option-btn[data-letter="C"].selected { 
+    background:#4CAF50; 
+    color:#fff;
+}
+.option-btn[data-letter="D"].selected { 
+    background:#FFC107; 
+    color:#000;
+}
+.option-btn[data-letter="E"].selected { 
+    background:#9C27B0; 
+    color:#fff;
+}
+.option-btn[data-letter="F"].selected { 
+    background:#E91E63; 
+    color:#fff;
+}
+
+.option-btn {
     border:none;
     padding:0.5rem 0.75rem;
     border-radius:4px;
     cursor:pointer;
     font-weight:600;
+    transition: all var(--transition);
+    font-size:0.75rem;
 }
 
-.option-btn.selected {
-    border:3px solid #000;
-}
-
-.option-btn:nth-child(2) {
-    background:#F44336;
-}
-
-.option-btn:nth-child(3) {
-    background:#4CAF50;
-}
-
-.option-btn:nth-child(4) {
-    background:#FFC107;
-    color:#000;
+.option-btn:hover {
+    filter:brightness(0.9);
 }
