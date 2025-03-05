@@ -66,7 +66,7 @@ let pdfDoc = null;
 let pdfContainer = null;
 let currentPage = 1;
 let totalPages = 1;
-let currentScale = 1.8;
+let currentScale = 1.3;
 let prevPageBtn, nextPageBtn, currentPageEl, totalPagesEl, zoomInBtn, zoomOutBtn;
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
@@ -214,13 +214,9 @@ function renderPage(pageNumber) {
         containerHeight = pdfContainer.clientHeight || containerHeight;
       }
       
-      const viewport = page.getViewport({ scale: 1.0 });
-      
-      const scaleToFit = (containerHeight * 0.95) / viewport.height;
-      const finalScale = scaleToFit * currentScale;
-      
+      const finalScale = currentScale;
       const scaledViewport = page.getViewport({ scale: finalScale });
-      
+            
       pdfCanvas.height = scaledViewport.height;
       pdfCanvas.width = scaledViewport.width;
       
